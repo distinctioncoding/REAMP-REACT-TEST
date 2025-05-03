@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const API = axios.create({
+const apiClient = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: {
       'Content-Type': 'application/json'
     }
   });
 
-  API.interceptors.request.use(
+  apiClient.interceptors.request.use(
     (config) => {
       const user = localStorage.getItem('user');
       const token = user ? JSON.parse(user).token : null;
@@ -19,7 +19,7 @@ const API = axios.create({
     (error) => Promise.reject(error)
   );
 
-  API.interceptors.response.use(
+  apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
       const isLoginEndpoint = error.config?.url?.includes('/login');
@@ -31,4 +31,4 @@ const API = axios.create({
     }
   );
 
-  export default API;
+  export default apiClient;
