@@ -37,9 +37,7 @@ function App() {
       <div className="p-4">
         <nav className="space-x-4 mb-6">
           <h2>测试Route</h2>
-          
-
-         
+          <p></p>
         </nav>
 
         <Routes>
@@ -63,7 +61,6 @@ function App() {
       </div>
     </BrowserRouter>
     </>
-    
   )
 }
 
