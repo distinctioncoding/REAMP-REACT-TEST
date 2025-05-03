@@ -12,14 +12,6 @@ function App() {
   return (
     <>
     <h1 className="text-3xl font-bold text-blue-600">Hello Tailwind</h1>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" /> npm install react-router-dom
-        </a>
-      </div>
       <h1>Vite + React</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
@@ -29,36 +21,22 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
 
       <BrowserRouter>
-      <div className="p-4">
-        <nav className="space-x-4 mb-6">
-          <h2>测试Route</h2>
-          <p></p>
-        </nav>
-
         <Routes>
           <Route path="/" element={
             <div>
-              <Link to="/About" className="text-blue-500 hover:underline">
-              <button style={{padding:'10px 20px', fontSize:'16px'}}>Navigate to the about Page</button>
-              </Link>
+              <Link to="/About" className="text-blue-500 hover:underline">Navigate to the about Page</Link>
               <Home/>
             </div>
           } />
 
           <Route path="/about" element={
             <div>
-              <Link to="/" className="text-blue-500 hover:underline">
-              <button style={{padding:'10px 20px', fontSize:'16px'}}>Navigate to the Home Page</button>
-              </Link>
+              <Link to="/" className="text-blue-500 hover:underline">Navigate to the Home Page</Link>
               <About/>
             </div>}/>
         </Routes>
-      </div>
     </BrowserRouter>
     </>
   )
