@@ -1,7 +1,5 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+<<<<<<< HEAD
 import CreateAgentModel from './components/CreateAgentModel'
 
 function App() {
@@ -36,6 +34,18 @@ function App() {
       <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
     </>
   )
+=======
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+function App() {
+  return (
+    <BrowserRouter>
+      {/* 你可以稍后在这里添加 <Routes> 和 <Route> */}
+      <Routes>
+          <Route path="/"/>
+        </Routes>
+    </BrowserRouter>
+  );
+>>>>>>> 7bb9d5579c5122a6f4f489f277585d13fb915308
 }
 
 export default App
