@@ -1,14 +1,14 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-// import CreateAgentModel from './components/CreateAgentModel'
-// import { useState } from 'react';
+import CreateAgentModel from './components/CreateAgentModel'
+import { useState } from 'react';
 
 
 function App() {
 
-  // const [isModalVisible, setModalVisible] = useState(false);
-  // const closeModal = () => setModalVisible(false);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const closeModal = () => setModalVisible(false);
 
   return (
     <BrowserRouter>
@@ -17,9 +17,9 @@ function App() {
           <Route path="/"/>
         </Routes>
 
-
-        {/* <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
-      <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel> */}
+        
+        <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
+      <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
 
     </BrowserRouter>
   );

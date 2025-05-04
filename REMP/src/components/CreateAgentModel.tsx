@@ -34,7 +34,7 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
       onClick={onClose}
     >
       <div 
-        className="relative w-[800px] max-w-[90vw] h-[1000px] max-h-[96vh] border border-gray-200 rounded-md bg-white overflow-auto px-6 py-3"
+        className="relative w-[700px] max-w-[80vw] h-[1000px] max-h-[96vh] border border-gray-200 rounded-md bg-white overflow-auto px-6 py-3"
         onClick={(e) => e.stopPropagation()}
       >
         <RxCross2 className='absolute w-6 h-6 top-6 right-6 text-gray-600 text-xl cursor-pointer hover:text-gray-900'
@@ -43,18 +43,18 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
        
         <form className='h-full'  action="">
              {/* Header */}
-            <div className=' h-[10%] p-3 pt-2 border-b-2 border-b-gray-100 flex flex-col items-start'>
-                <h3 className="text-xl font-bold text-left">Create a new Agent</h3>
-                <div className="text-base text-gray-600 text-left pt-1">Please complete below information</div>
+            <div className=' h-[12%] p-3 pt-1 border-b-2 border-b-gray-100 flex flex-col items-start'>
+                <h3 className="text-[1.15rem] font-bold text-left">Create a new Agent</h3>
+                <div className="!text-sm text-gray-600 text-left ">Please complete below information</div>
                 </div>
                     {/* Content */}
-            <div className='h-[80%] border-b-2 border-b-gray-100 flex items-center justify-center'>
+            <div className='h-[78%] border-b-2 border-b-gray-100 flex items-center justify-center'>
                 <div className='w-[60%] h-full '>
                     
                     {/* 圆形图片上传区域 */}
                     <div className="flex flex-col items-center  mt-4">
                         <div 
-                            className="w-20 h-20 relative cursor-pointer mb-3"
+                            className="w-16 h-16 relative cursor-pointer mb-3"
                             onClick={() => document.getElementById('image-upload')?.click()}
                         >
                             {previewUrl ? (
@@ -80,7 +80,7 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
                             )}
                         </div>
                         
-                        <span className="text-base text-gray-600">Photo</span>
+                        <span className="text-sm text-gray-600">Photo</span>
                     
                         
                         {/* 隐藏的文件输入 */}
@@ -94,46 +94,46 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
                     </div>
 
                     
-                    <div className="w-full space-y-3">
+                    <div className="w-full space-y-2 text-sm">
                         {/* First Name */}
                         <div className="w-full">
-                            <label className="block text-base font-medium text-gray-700 mb-1 text-left">First Name</label>
+                            <label className="block  font-medium text-gray-700 mb-1 text-left">First Name</label>
                             <input
                                 type="text"
-                                className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter agent first name"
                             />
                         </div>
                         {/* Last Name */}
                         <div className="w-full">
-                            <label className="block text-base font-medium text-gray-700 mb-1 text-left">Last Name</label>
+                            <label className="block  font-medium text-gray-700 mb-1 text-left">Last Name</label>
                             <input
                                 type="text"
-                                className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter agent last name"
                             />
                         </div>
                         {/* Email */}
                         <div className="w-full">
-                            <label className="block text-base font-medium text-gray-700 mb-1 text-left">Email</label>
+                            <label className="block  font-medium text-gray-700 mb-1 text-left">Email</label>
                             <input
                                 type="text"
-                                className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter email"
                             />
                         </div>
                         {/* Phone number */}
                         <div className="w-full">
-                            <label className="block text-base font-medium text-gray-700 mb-1 text-left">Phone Number</label>
+                            <label className="block  font-medium text-gray-700 mb-1 text-left">Phone Number</label>
                             <input
                                 type="text"
-                                className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter phone number"
                             />
                         </div>
                         {/* Team or Office Name */}
                         <div className="w-full">
-                            <label className="block text-base font-medium text-gray-700 mb-1 text-left"> Team or Office Name</label>
+                            <label className="block  font-medium text-gray-700 mb-1 text-left"> Team or Office Name</label>
                             <input
                                 type="text"
                                 className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
