@@ -1,18 +1,16 @@
 import { CiCamera } from "react-icons/ci";
 import { FiLayout } from "react-icons/fi";
 import { formatDate } from '../lib/formatDate';
-import { Listing } from '../types/Listing'
+import { ListingCase, ListcaseStatus, getStatusLabel } from '../types/Listing';
 
 interface PropertyCardProps {
-  listing: Listing;
+  listing: ListingCase;
 }
-const PropertyCard = ({listing}: PropertyCardProps) => {
-  const latestStatus = listing.statusLogs
-  .slice()
-  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())[0]?.newStatus || 'Unknown';
 
+const PropertyCard = ({ listing }: PropertyCardProps) => {
+  const latestStatus = getStatusLabel(listing.listcaseStatus as ListcaseStatus);
   const formattedDate = formatDate(listing.createdAt);
-  
+
   
   return (
       <div className="relative w-full max-w-screen-lg mx-auto my-6 px-4 py-5 bg-white border border-gray-200 rounded-md shadow-sm">
