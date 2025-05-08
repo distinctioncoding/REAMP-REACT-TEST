@@ -7,12 +7,12 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
-          {/* test code */}
-            <h1 style={{ fontFamily: 'SF Pro Display', fontWeight: 200 }}>Thin Weight (200)</h1>
-            <h1 style={{ fontFamily: 'SF Pro Display', fontWeight: 400 }}>Regular (400)</h1>
-            <h1 style={{ fontFamily: 'SF Pro Display', fontWeight: 500 }}>Medium (500)</h1>
-            <h1 style={{ fontFamily: 'SF Pro Display', fontWeight: 600 }}>Semibold (600)</h1>
-            <h1 style={{ fontFamily: 'SF Pro Display', fontWeight: 700 }}>Bold (700)</h1>
+            {/* test code */}
+            <h1 className="font-sans font-light">Light (300)</h1>
+            <h1 className="font-sans font-normal">Regular (400)</h1>
+            <h1 className="font-sans font-medium">Medium (500)</h1>
+            <h1 className="font-sans font-semibold">Semibold (600)</h1>
+            <h1 className="font-sans font-bold">Bold (700)</h1>
           </>
         } />
       </Routes>

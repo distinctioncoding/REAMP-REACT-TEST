@@ -24,12 +24,12 @@
 
 @font-face {
   font-family: 'SF Pro Display';
-  src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Thin.otf') format('opentype');
-  font-weight: 200;
+  src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Light.otf') format('opentype');
+  font-weight: 300;
 }
 
-
 @import "tailwindcss";
+
 :root {
   font-family: 'SF Pro Display', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
