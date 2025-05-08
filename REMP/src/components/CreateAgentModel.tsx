@@ -7,14 +7,31 @@ interface CreateAgentModelProps {
 }
 
 export default function CreateAgentModel({ isVisible, onClose }: CreateAgentModelProps) {
-  if (!isVisible) return null;
-  
   // 添加状态管理上传的图片和预览URL
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [, setSelectedImage] = useState<File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  
+  const [formData, setFormData] = useState({
+    email: '',
+    agentFirstName: '',
+    agentLastName: '',
+    companyName: '',
+    phoneNumber: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  // 处理表单字段变化
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
   // 处理图片选择
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -24,6 +41,79 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
       // 创建预览URL
       const fileUrl = URL.createObjectURL(file);
       setPreviewUrl(fileUrl);
+    }
+  };
+
+  if (!isVisible) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    setSuccess(null);
+    console.log('Form data:', formData);
+    
+    try {
+      // 创建 FormData 对象
+      const submitFormData = new FormData();
+      submitFormData.append('Email', formData.email); // 注意首字母大写
+      submitFormData.append('AgentFirstName', formData.agentFirstName);
+      submitFormData.append('AgentLastName', formData.agentLastName);
+      submitFormData.append('CompanyName', formData.companyName);
+      submitFormData.append('PhoneNumber', formData.phoneNumber);
+      
+      // 添加图片（如果有）
+      if (selectedImage) {
+        submitFormData.append('AvatarImage', selectedImage); // 注意首字母大写
+      }
+      
+      // 发送请求到后端API
+      const response = await fetch('/api/User/CreateAgentAccount', {
+        method: 'POST',
+        body: submitFormData,
+      });
+      
+      // 处理响应
+      if (response.ok) {
+        // 检查响应是否为空
+        const text = await response.text();
+        let result;
+        try {
+          // 尝试解析 JSON (如果存在)
+          result = text ? JSON.parse(text) : {};
+        } catch (e) {
+          console.warn('Could not parse response as JSON:', text);
+          result = {};
+        }
+        
+        setSuccess('Agent created successfully');
+        console.log('Success:', result);
+        
+        // 清空表单或关闭模态框
+        setTimeout(() => {
+          onClose();
+        }, 1500);
+      } else if (response.status === 409) {
+        // 同样安全地解析 JSON
+        const text = await response.text();
+        const errorData = text ? JSON.parse(text) : {};
+        setError(errorData.message || 'Email already exists.');
+      } else {
+        // 同样安全地解析 JSON
+        const text = await response.text();
+        let errorData = {};
+        try {
+          errorData = text ? JSON.parse(text) : {};
+        } catch (e) {
+          console.warn('Error response is not valid JSON:', text);
+        }
+        setError(errorData.message || `Failed to create agent. Status: ${response.status}`);
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+      console.error('Error:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   
@@ -41,15 +131,15 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
             onClick={onClose}
         />
        
-        <form className='h-full'  action="">
+        <form className='h-full' onSubmit={handleSubmit}>
              {/* Header */}
-            <div className=' h-[12%] p-3 pt-1 border-b-2 border-b-gray-100 flex flex-col items-start'>
+            <div className=' h-[12%] p-3 pt-2 border-b-2 border-b-gray-100 flex flex-col items-start'>
                 <h3 className="text-[1.15rem] font-bold text-left">Create a new Agent</h3>
                 <div className="!text-sm text-gray-600 text-left ">Please complete below information</div>
                 </div>
                     {/* Content */}
             <div className='h-[78%] border-b-2 border-b-gray-100 flex items-center justify-center'>
-                <div className='w-[60%] h-full '>
+                <div className='w-[50%] h-full '>
                     
                     {/* 圆形图片上传区域 */}
                     <div className="flex flex-col items-center  mt-4">
@@ -97,47 +187,67 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
                     <div className="w-full space-y-2 text-sm">
                         {/* First Name */}
                         <div className="w-full">
-                            <label className="block  font-medium text-gray-700 mb-1 text-left">First Name</label>
+                            <label className="block font-medium text-gray-700 mb-1 text-left">First Name</label>
                             <input
                                 type="text"
+                                name="agentFirstName"
+                                value={formData.agentFirstName}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter agent first name"
+                                required
                             />
                         </div>
                         {/* Last Name */}
                         <div className="w-full">
-                            <label className="block  font-medium text-gray-700 mb-1 text-left">Last Name</label>
+                            <label className="block font-medium text-gray-700 mb-1 text-left">Last Name</label>
                             <input
                                 type="text"
+                                name="agentLastName"
+                                value={formData.agentLastName}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter agent last name"
+                                required
                             />
                         </div>
                         {/* Email */}
                         <div className="w-full">
-                            <label className="block  font-medium text-gray-700 mb-1 text-left">Email</label>
+                            <label className="block font-medium text-gray-700 mb-1 text-left">Email</label>
                             <input
-                                type="text"
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter email"
+                                required
                             />
                         </div>
                         {/* Phone number */}
                         <div className="w-full">
-                            <label className="block  font-medium text-gray-700 mb-1 text-left">Phone Number</label>
+                            <label className="block font-medium text-gray-700 mb-1 text-left">Phone Number</label>
                             <input
-                                type="text"
+                                type="tel"
+                                name="phoneNumber"
+                                value={formData.phoneNumber}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-1 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter phone number"
+                                required
                             />
                         </div>
                         {/* Team or Office Name */}
                         <div className="w-full">
-                            <label className="block  font-medium text-gray-700 mb-1 text-left"> Team or Office Name</label>
+                            <label className="block font-medium text-gray-700 mb-1 text-left">Team or Office Name</label>
                             <input
                                 type="text"
+                                name="companyName"
+                                value={formData.companyName}
+                                onChange={handleInputChange}
                                 className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter Team or Office Name"
+                                required
                             />
                         </div>
                         
@@ -149,13 +259,22 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
 
                 {/* Bottom */}
             <div className=' h-[10%] flex items-center justify-end '>
-                    <button className='!rounded-3xl !bg-white !font-semibold  text-base !border-2 !border-black !px-6 !py-2 !hover:bg-gray-100' onClick={onClose}>
+                    <button 
+                      type="button"
+                      className='!rounded-3xl !bg-white !font-semibold  text-base !border-2 !border-black !px-4 !py-1.25 !hover:bg-gray-100' 
+                      onClick={onClose}
+                    >
                     Cancel
                     </button>
-                    <button className='ml-5 !rounded-3xl !font-semibold text-base text-white !px-6 !py-2.35 '
-                    style={{ background: 'linear-gradient(to right, #1cadf8, #1099e1)' }}
-                    type='submit'
-                    >Create</button>
+                    <button 
+                      type="submit"
+                      className='ml-5 !rounded-3xl !font-semibold text-base text-white !px-4 !py-1.25 '
+                      style={{ background: 'linear-gradient(to right, #1cadf8, #1099e1)' }}
+                      disabled={isSubmitting}
+                    >
+                    {isSubmitting ? 'Creating...' : 'Create'}
+                    </button>
+                    {/* >Create</button> */}
             </div>
 
         </form>
