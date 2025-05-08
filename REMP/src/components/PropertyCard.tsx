@@ -1,7 +1,9 @@
 import { CiCamera } from "react-icons/ci";
 import { FiLayout } from "react-icons/fi";
-import { formatDate } from '../lib/formatDate';
-import { ListingCase, ListcaseStatus, getStatusLabel } from '../types/Listing';
+import { formatDate } from '../lib/format-date';
+import { ListcaseStatus } from "../enums/listcase-status";
+import { getStatusLabel } from "../lib/get-status-label";
+import { ListingCase } from '../interfaces/listing-case';
 
 interface PropertyCardProps {
   listing: ListingCase;

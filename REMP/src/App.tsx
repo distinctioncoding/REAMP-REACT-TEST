@@ -1,9 +1,9 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PropertyCard from './components/PropertyCard'; 
-import { ListingCase } from './types/Listing';
+import { ListingCase } from './interfaces/listing-case';
+// mock data for testing
 const mockListing: ListingCase = {
-  
   "id": 3,
   "title": "listcase3",
   "propertyType": 1,
@@ -21,7 +21,6 @@ const mockListing: ListingCase = {
   "listcaseStatus": 1,
   "createdAt": "2025-05-05T04:07:04.5072751",
   "isDeleted": false
-  
 };
 function App() {
   return (
