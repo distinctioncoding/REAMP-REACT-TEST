@@ -7,7 +7,7 @@ module.exports = {
     theme: {
       extend: {
         fontFamily: {
-          sans: ['"SF Pro Display"', 'system-ui', 'sans-serif'],
+          sans: ['SF Pro Display', 'system-ui', 'sans-serif'],
         },
       },
     },
