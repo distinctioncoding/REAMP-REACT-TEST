@@ -7,12 +7,7 @@ function App() {
       <Routes>
         <Route path="/" element={
           <>
-            {/* test code */}
-            <h1 className="font-sans font-light">Light (300)</h1>
-            <h1 className="font-sans font-normal">Regular (400)</h1>
-            <h1 className="font-sans font-medium">Medium (500)</h1>
-            <h1 className="font-sans font-semibold">Semibold (600)</h1>
-            <h1 className="font-sans font-bold">Bold (700)</h1>
+            
           </>
         } />
       </Routes>
