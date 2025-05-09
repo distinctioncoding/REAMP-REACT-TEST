@@ -1,5 +1,10 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import CreateAgentModel from './components/CreateAgentModel'
+import { useState } from 'react';
+
+
 import PropertyCard from './components/PropertyCard'; 
 import { ListingCase } from './interfaces/listing-case';
 // mock data for testing
@@ -23,13 +28,19 @@ const mockListing: ListingCase = {
   "isDeleted": false
 };
 function App() {
+
+  const [isModalVisible, setModalVisible] = useState(false);
+  const closeModal = () => setModalVisible(false);
+
   return (
     <BrowserRouter>
       <Routes>
 
         <Route path="/" element={
           <>
-            
+            {/*  mock */}
+             <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
+             <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
           </>
         } />
 
