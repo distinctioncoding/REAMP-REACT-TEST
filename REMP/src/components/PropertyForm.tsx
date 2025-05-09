@@ -174,7 +174,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
           <label className="block font-semibold mb-1 text-gray-600">Postcode</label>
           <input
             type="number"
-            value={formData.postcode}
+            value={formData.postcode === 0 ? '' : formData.postcode}
             onChange={(e) => handleChange('postcode', Number(e.target.value))}
             placeholder="Enter postcode"
             className="w-full border px-3"
@@ -186,7 +186,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
           <label className="block font-semibold mb-1 text-gray-600">Price</label>
           <input
             type="number"
-            value={formData.price}
+            value={formData.price === 0 ? '' : formData.price}
             onChange={(e) => handleChange('price', Number(e.target.value))}
             placeholder="Enter price"
             className="w-full border px-3"
