@@ -18,11 +18,11 @@
 }
   
 .button:hover {
-    background-color: #e0e0e0;
+    background-color: #eeeeee;
 }
   
 .button.selected {
-    background-color: #c6c6c6;
+    background-color: #E8ECF0;
     font-weight: bold;
 }
   
