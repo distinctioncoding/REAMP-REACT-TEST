@@ -26,6 +26,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        <Route path="/" element={
+          <>
+            
+          </>
+        } />
+
         <Route path="/property" element={<PropertyCard listing={mockListing} />} />
       </Routes>
     </BrowserRouter>
