@@ -274,7 +274,6 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
                     >
                     {isSubmitting ? 'Creating...' : 'Create'}
                     </button>
-                    {/* >Create</button> */}
             </div>
 
         </form>
