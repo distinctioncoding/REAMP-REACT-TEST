@@ -24,27 +24,32 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <nav className="bg-[#0085CA] text-white flex items-center justify-between px-6 py-3">
-        <div className="font-bold text-xl leading-tight">
-          <div>recam</div>
-          <div className="text-[5px] font-normal tracking-wider">SIMPLE SHOOT · PRO RESULTS</div>
+    <div>
+      <nav className="w-full fixed top-0 left-0 z-50 bg-[#0085CA] text-white flex items-center  justify-between px-6 py-3">
+        <div className="flex items-center space-x-8">
+          <div className="font-bold text-xl leading-tight">
+            <div>recam</div>
+            <div className="text-[5px] font-normal tracking-wider">SIMPLE SHOOT · PRO RESULTS</div>
+          </div>
+
+          <div className="flex space-x-2 font-semibold text-white ml-6 justify-start">
+            {navItems.map((item) => (
+              <button
+                key={item.key}
+                onClick={() => setActiveTab(item.key)}
+                className={`nav-button ${activeTab === item.key}`}>
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="flex space-x-2 font-semibold text-white ml-6">
-          {navItems.map((item) => (
-            <button
-              key={item.key}
-              onClick={() => setActiveTab(item.key)}
-              className={`nav-button ${activeTab === item.key}`}>
-              {item.label}
-            </button>
-          ))}
-        </div>
 
-        <button className="nav-button ml-6">
-        <LogOut size={20} className="text-white" />
-        </button>
+        <div className="flex items-center">
+          <button className="nav-button">
+            <LogOut size={20} className="text-white" />
+          </button>
+        </div>
       </nav>
 
       {/* 页面内容 */}
