@@ -4,9 +4,9 @@ export const SaleCategory = {
     ForRent: 3,
   };
   
-  export const SaleCategoryOptions = [
-    { label: "For Sale", value: SaleCategory.ForSale },
-    { label: "Auction", value: SaleCategory.Auction },
-    { label: "For Rent", value: SaleCategory.ForRent },
-  ];
+export const SaleCategoryOptions = [
+  { label: "For Sale", value: SaleCategory.ForSale },
+  { label: "Auction", value: SaleCategory.Auction },
+  { label: "For Rent", value: SaleCategory.ForRent },
+];
   

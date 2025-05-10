@@ -11,8 +11,8 @@ export default function PropertyModalContainer({ onClose }: PropertyModalContain
     <CommonModal
       isOpen={true}
       onClose={onClose}
-      title="Create Property"
-      subtitle="Please fill out the property details"
+      title="Property details"
+      subtitle="Please take a moment to review and complete property details"
       size="lg"
     >
       <PropertyForm onClose={onClose} />

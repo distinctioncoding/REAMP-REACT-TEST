@@ -6,11 +6,11 @@ export const PropertyType = {
     Others: 5,
   };
   
-  export const PropertyTypeOptions = [
-    { label: "House", value: PropertyType.House },
-    { label: "Apartment / Unit", value: PropertyType.Unit },
-    { label: "Townhouse", value: PropertyType.Townhouse },
-    { label: "Villa", value: PropertyType.Villa },
-    { label: "Others", value: PropertyType.Others },
-  ];
+export const PropertyTypeOptions = [
+  { label: "House", value: PropertyType.House },
+  { label: "Apartment / Unit", value: PropertyType.Unit },
+  { label: "Townhouse", value: PropertyType.Townhouse },
+  { label: "Villa", value: PropertyType.Villa },
+  { label: "Others", value: PropertyType.Others },
+];
   
