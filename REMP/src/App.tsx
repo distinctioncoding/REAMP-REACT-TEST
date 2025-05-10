@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PropertyCard from './components/PropertyCard'; 
 import { ListingCase } from './interfaces/listing-case';
+import DashboardLayout from './components/DashboardLayout';
 // mock data for testing
 const mockListing: ListingCase = {
   "id": 3,
@@ -22,25 +23,18 @@ const mockListing: ListingCase = {
   "createdAt": "2025-05-05T04:07:04.5072751",
   "isDeleted": false
 };
-import DashboardLayout from './components/DashboardLayout';
-import Profile from './pages/dashboard/Profile';
-import Settings from './pages/dashboard/Settings';
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
 
-        <Route path="/" element={
-          <>
-            
-          </>
-        } />
+        <Route path="/dashboard" element={<DashboardLayout />}>
+
+      </Route>
 
         <Route path="/property" element={<PropertyCard listing={mockListing} />} />
-      </Routes>
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="profile" element={<Profile />} />
-          <Route path="settings" element={<Settings />} />
+        <Route path="/dashboard">
         </Route>
       </Routes>
     </BrowserRouter>
