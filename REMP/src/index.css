@@ -14,14 +14,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* nav bar内容字体颜色 */
 a {
   font-weight: 500;
-  color: #646cff;
+  /* color: #646cff; */
   text-decoration: inherit;
 }
-a:hover {
+/* a:hover {
   color: #535bf2;
-}
+} */
 
 body {
   margin: 0;
@@ -43,6 +44,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
+  /* 图标背景颜色 */
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
