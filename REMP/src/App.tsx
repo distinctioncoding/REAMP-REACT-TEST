@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PropertyCard from './components/PropertyCard'; 
+import PropertyCard from './components/PropertyCard';
 import { ListingCase } from './interfaces/listing-case';
 import HeroImageSelect from './components/HeroImageSelect';
 
@@ -26,8 +26,12 @@ const mockListing: ListingCase = {
   "isDeleted": false
 };
 
-const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
+// const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
+const mockImages = Array.from({ length: 25 }, (_, i) => ({
+  id: `${i}`,
+  url: `https://picsum.photos/seed/${i}/150`
+}));
 
 
 function App() {
@@ -36,15 +40,15 @@ function App() {
       <Routes>
         <Route path="/property" element={<PropertyCard listing={mockListing} />} />
         <Route
-  path="/hero-select"
-  element={
-    <HeroImageSelect
-      images={mockImages}
-      onSave={(img) => console.log('Selected image:', img)}
-      onCancel={() => console.log('Cancelled')}
-    />
-  }
-/>
+          path="/hero-select"
+          element={
+            <HeroImageSelect
+              images={mockImages}
+              onSave={(img) => console.log('Selected image:', img)}
+              onCancel={() => console.log('Cancelled')}
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
