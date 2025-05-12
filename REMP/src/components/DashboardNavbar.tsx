@@ -1,15 +1,13 @@
 import { LogOut } from 'lucide-react';
 
-type NavItem = {
-  label: string;
-  key: string;
-};
+type ButtonType = 'Listing' | 'Agents' | 'Photography companies';
 
 interface DashboardNavbarProps {
-  navItems: readonly NavItem[];
-  activeTab: string;
-  onTabChange: (key: string) => void;
+  navItems: readonly ButtonType[];
+  activeTab: ButtonType;
+  onTabChange: (key: ButtonType) => void;
 }
+
 
 function DashboardNavbar(props: DashboardNavbarProps) {
   const { navItems, activeTab, onTabChange } = props;
@@ -25,12 +23,12 @@ function DashboardNavbar(props: DashboardNavbarProps) {
         <div className="flex space-x-2 font-semibold text-white ml-6 justify-start">
           {navItems.map((item) => (
             <button
-              key={item.key}
-              onClick={() => onTabChange(item.key)}
+              key={item}
+              onClick={() => onTabChange(item)}
               className={`px-4 py-2 rounded font-medium transition-colors duration-200
-            ${activeTab === item.key ? 'bg-[#535bf2] text-white' : 'hover:bg-[#535bf2] text-white'}`}
+            ${activeTab === item ? 'bg-[#535bf2] text-white' : 'hover:bg-[#535bf2] text-white'}`}
             >
-              {item.label}
+              {item}
             </button>
           ))}
         </div>
