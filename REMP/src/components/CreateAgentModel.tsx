@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { RxCross2 } from "react-icons/rx";
+import apiClient from '../api/apiClient';
+import axios from 'axios';
 
 interface CreateAgentModelProps {
   isVisible: boolean;
@@ -20,8 +22,8 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
     phoneNumber: ''
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
+  const [, setSuccess] = useState<string | null>(null);
 
   // 处理表单字段变化
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,53 +70,38 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
       }
       
       // 发送请求到后端API
-      const response = await fetch('/api/User/CreateAgentAccount', {
-        method: 'POST',
-        body: submitFormData,
+      // const response = await fetch('/api/User/CreateAgentAccount', {
+      //   method: 'POST',
+      //   body: submitFormData,
+      // });
+
+      const response = await apiClient.post('/User/CreateAgentAccount', submitFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       
-      // 处理响应
-      if (response.ok) {
-        // 检查响应是否为空
-        const text = await response.text();
-        let result;
-        try {
-          // 尝试解析 JSON (如果存在)
-          result = text ? JSON.parse(text) : {};
-        } catch (e) {
-          console.warn('Could not parse response as JSON:', text);
-          result = {};
-        }
+      // 成功处理
+      setSuccess('Agent created successfully');
+      console.log('Success:', response.data);
         
-        setSuccess('Agent created successfully');
-        console.log('Success:', result);
-        
-        // 清空表单或关闭模态框
-        setTimeout(() => {
-          onClose();
-        }, 1500);
-      } else if (response.status === 409) {
-        // 同样安全地解析 JSON
-        const text = await response.text();
-        const errorData = text ? JSON.parse(text) : {};
-        setError(errorData.message || 'Email already exists.');
-      } else {
-        // 同样安全地解析 JSON
-        const text = await response.text();
-        let errorData = {};
-        try {
-          errorData = text ? JSON.parse(text) : {};
-        } catch (e) {
-          console.warn('Error response is not valid JSON:', text);
+      }catch (error) {
+        // 错误处理
+        if (axios.isAxiosError(error)) {
+          // 处理特定的错误状态码
+          if (error.response?.status === 409) {
+            setError(error.response.data.message || 'Email already exists.');
+          } else {
+            setError(error.response?.data?.message || 'Failed to create agent.');
+          }
+          console.error('API Error:', error.response?.data);
+        } else {
+          setError('An unexpected error occurred.');
+          console.error('Unexpected error:', error);
         }
-        setError(errorData.message || `Failed to create agent. Status: ${response.status}`);
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-      console.error('Error:', err);
-    } finally {
-      setIsSubmitting(false);
-    }
   };
   
   return (
@@ -134,8 +121,8 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
         <form className='h-full' onSubmit={handleSubmit}>
              {/* Header */}
             <div className=' h-[12%] p-3 pt-2 border-b-2 border-b-gray-100 flex flex-col items-start'>
-                <h3 className="text-[1.15rem] font-bold text-left">Create a new Agent</h3>
-                <div className="!text-sm text-gray-600 text-left ">Please complete below information</div>
+                <h3 className="text-[1.15rem] text-black font-bold text-left">Create a new Agent</h3>
+                <div className="text-base md:text-sm text-gray-600 text-left ">Please complete below information</div>
                 </div>
                     {/* Content */}
             <div className='h-[78%] border-b-2 border-b-gray-100 flex items-center justify-center'>
@@ -184,7 +171,7 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
                     </div>
 
                     
-                    <div className="w-full space-y-2 text-sm">
+                    <div className="w-full space-y-2 text-sm text-black ">
                         {/* First Name */}
                         <div className="w-full">
                             <label className="block font-medium text-gray-700 mb-1 text-left">First Name</label>
@@ -261,14 +248,14 @@ export default function CreateAgentModel({ isVisible, onClose }: CreateAgentMode
             <div className=' h-[10%] flex items-center justify-end '>
                     <button 
                       type="button"
-                      className='!rounded-3xl !bg-white !font-semibold  text-base !border-2 !border-black !px-4 !py-1.25 !hover:bg-gray-100' 
+                      className='rounded-3xl bg-white font-semibold  text-base border-2 border-black  text-black px-4 py-1.25 hover:bg-gray-100' 
                       onClick={onClose}
                     >
                     Cancel
                     </button>
                     <button 
                       type="submit"
-                      className='ml-5 !rounded-3xl !font-semibold text-base text-white !px-4 !py-1.25 '
+                      className='ml-5 rounded-3xl font-semibold text-base text-white px-4 py-1.25 '
                       style={{ background: 'linear-gradient(to right, #1cadf8, #1099e1)' }}
                       disabled={isSubmitting}
                     >

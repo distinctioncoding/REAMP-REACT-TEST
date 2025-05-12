@@ -29,7 +29,7 @@ const mockListing: ListingCase = {
 };
 function App() {
 
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const closeModal = () => setModalVisible(false);
 
   return (
