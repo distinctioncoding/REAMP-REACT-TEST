@@ -1,33 +1,36 @@
-@import "tailwindcss";
-
-/* ========== Custom Fonts ========== */
-@font-face {
-  font-family: 'SF Pro Display';
-  src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Light.otf') format('opentype');
-  font-weight: 300;
-}
 @font-face {
   font-family: 'SF Pro Display';
   src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Regular.otf') format('opentype');
   font-weight: 400;
 }
+
 @font-face {
   font-family: 'SF Pro Display';
   src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Medium.otf') format('opentype');
   font-weight: 500;
 }
+
 @font-face {
   font-family: 'SF Pro Display';
   src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Semibold.otf') format('opentype');
   font-weight: 600;
 }
+
 @font-face {
   font-family: 'SF Pro Display';
   src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Bold.otf') format('opentype');
   font-weight: 700;
 }
 
-/* ========== Base Styles ========== */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('./assets/fonts/SFProDisplay/SF-Pro-Display-Light.otf') format('opentype');
+  font-weight: 300;
+}
+
+@import "tailwindcss";
+
+
 :root {
   font-family: 'SF Pro Display', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -39,18 +42,41 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 body {
   margin: 0;
   background-color: #f9fafb; 
   color: #111827; 
 }
 
-/* ========== Link Styling ========== */
+
 a {
   font-weight: 500;
-  color: #3b82f6;
-  text-decoration: none;
+  color: #646cff;
+  text-decoration: inherit;
 }
 a:hover {
-  text-decoration: underline;
+  color: #535bf2;
 }
+
+:root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove spin buttons for number inputs */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
