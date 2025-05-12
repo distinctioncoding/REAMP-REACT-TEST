@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
+import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 
 // mock user token for testing
@@ -34,6 +34,7 @@ function App() {
 
 
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
+        <Route path="/login" element={<SignInPage/>} />
 
 
         <Route
