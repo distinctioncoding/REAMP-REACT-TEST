@@ -1,9 +1,9 @@
 import { CiCamera } from "react-icons/ci";
 import { FiLayout } from "react-icons/fi";
-import { formatDate } from '../lib/format-date';
-import { ListcaseStatus } from "../enums/listcase-status";
-import { getStatusLabel } from "../lib/get-status-label";
-import { ListingCase } from '../interfaces/listing-case';
+import { formatDate } from '../../lib/format-date';
+import { ListcaseStatus } from "../../enums/listcase-status";
+import { getStatusLabel } from "../../lib/get-status-label";
+import { ListingCase } from '../../interfaces/listing-case';
 
 interface PropertyCardProps {
   listing: ListingCase;
@@ -13,7 +13,6 @@ const PropertyCard = ({ listing }: PropertyCardProps) => {
   const latestStatus = getStatusLabel(listing.listcaseStatus as ListcaseStatus);
   const formattedDate = formatDate(listing.createdAt);
 
-  
   return (
       <div className="relative w-full max-w-screen-lg mx-auto my-6 px-4 py-5 bg-white border border-gray-200 rounded-md shadow-sm">
       {/* Status badge */}
@@ -31,7 +30,7 @@ const PropertyCard = ({ listing }: PropertyCardProps) => {
       <hr className="border-t border-gray-200 mb-4" />
     
       {/* Address */}
-      <h2 className="text-base font-semibold mb-4 text-left">
+      <h2 className="text-base font-semibold mb-4 text-left text-gray-800">
         {listing.street}, {listing.city}, {listing.state}, {listing.postcode}
       </h2>
     
