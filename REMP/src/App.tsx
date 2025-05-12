@@ -1,11 +1,20 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PropertyCard from './components/PropertyCard';
-import { ListingCase } from './interfaces/listing-case';
+
+import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
+
+// mock user token for testing
+if (import.meta.env.DEV && !localStorage.getItem('user')) {
+  localStorage.setItem('user', JSON.stringify({
+    token: 'user login token'
+  }));
+}
+
 import HeroImageSelect from './components/HeroImageSelect';
 
 
 import DashboardLayout from './components/DashboardLayout';
+import { ListingCase } from './interfaces/listing-case';
 // mock data for testing
 const mockListing: ListingCase = {
   "id": 3,
@@ -36,6 +45,7 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 
 
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -45,7 +55,10 @@ function App() {
 
       </Route>
 
-        <Route path="/property" element={<PropertyCard listing={mockListing} />} />
+
+        <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
+
+
         <Route
           path="/hero-select"
           element={
@@ -56,6 +69,7 @@ function App() {
             />
           }
         />
+
         <Route path="/dashboard">
         </Route>
       </Routes>
