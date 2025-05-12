@@ -1,7 +1,10 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PropertyCard from './components/PropertyCard'; 
+import PropertyCard from './components/PropertyCard';
 import { ListingCase } from './interfaces/listing-case';
+import HeroImageSelect from './components/HeroImageSelect';
+
+
 import DashboardLayout from './components/DashboardLayout';
 // mock data for testing
 const mockListing: ListingCase = {
@@ -24,6 +27,15 @@ const mockListing: ListingCase = {
   "isDeleted": false
 };
 
+// const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
+// const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
+const mockImages = Array.from({ length: 25 }, (_, i) => ({
+  id: `${i}`,
+  url: `https://picsum.photos/seed/${i}/150`
+}));
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -34,6 +46,16 @@ function App() {
       </Route>
 
         <Route path="/property" element={<PropertyCard listing={mockListing} />} />
+        <Route
+          path="/hero-select"
+          element={
+            <HeroImageSelect
+              images={mockImages}
+              onSave={(img) => console.log('Selected image:', img)}
+              onCancel={() => console.log('Cancelled')}
+            />
+          }
+        />
         <Route path="/dashboard">
         </Route>
       </Routes>
