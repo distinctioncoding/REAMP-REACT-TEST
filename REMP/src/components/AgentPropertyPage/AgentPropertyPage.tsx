@@ -1,18 +1,18 @@
 import NavBar from "./NavBar"
 import PropertyCard from "./PropertyCard"
-import Sidebar from "./SideBar"
+import Sidebar, { ButtonType } from "./SideBar"
 import { useEffect, useState } from "react";
 import { getListingCases } from "../../api/listing-api";
 import { ListingCase } from "../../interfaces/listing-case";
 import { getStatusLabel } from "../../lib/get-status-label";
 export const AgentPropertyPage = () => {
 
-  const [listings, setLsitings] = useState<ListingCase[]>([])
-  const [selectedStatus, setSelectedStatus] = useState<string>("All");
+  const [listings, setListings] = useState<ListingCase[]>([])
+  const [selectedStatus, setSelectedStatus] = useState<ButtonType>("All");
 
   useEffect(()=>{
     getListingCases()
-      .then(setLsitings)
+      .then(setListings)
       .catch((err) => {
         console.error("Failed to fetch listings", err);
       })

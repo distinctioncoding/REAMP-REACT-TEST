@@ -12,7 +12,7 @@ interface PropertyCardProps {
 const PropertyCard = ({ listing }: PropertyCardProps) => {
   const latestStatus = getStatusLabel(listing.listcaseStatus as ListcaseStatus);
   const formattedDate = formatDate(listing.createdAt);
-  console.log(listing.street)
+
   return (
       <div className="relative w-full max-w-screen-lg mx-auto my-6 px-4 py-5 bg-white border border-gray-200 rounded-md shadow-sm">
       {/* Status badge */}

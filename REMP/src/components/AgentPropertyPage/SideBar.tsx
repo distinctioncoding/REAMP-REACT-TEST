@@ -1,11 +1,13 @@
 interface SidebarProps {
-  selected: string;
-  onSelect: (status: string) => void;
+  selected: ButtonType;
+  onSelect: (status: ButtonType) => void;
 }
 
-const buttons = ['All', 'Created', 'Pending', 'Delivered'];
+const buttons = ['All', 'Created', 'Pending', 'Delivered'] as const;
+export type ButtonType = typeof buttons[number];
 
 function Sidebar({selected,onSelect}:SidebarProps) {
+  
   return(
     <aside className="w-48 bg-gray-50 p-4 rounded-md min-h-screen">
       {buttons.map((button) => (
