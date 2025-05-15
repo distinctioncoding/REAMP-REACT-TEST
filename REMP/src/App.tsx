@@ -1,5 +1,7 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CreateAgentModel from './components/CreateAgentModel'
+import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 
@@ -47,13 +49,24 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 
 
 function App() {
+
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+  const closeModal = () => setModalVisible(false);
+
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={
+          <>
+            {/*  mock */}
+             <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
+             <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
+          </>
+        } />
 
         <Route path="/dashboard" element={<DashboardLayout />}>
 
-      </Route>
+        </Route>
 
 
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
@@ -79,3 +92,6 @@ function App() {
 }
 
 export default App;
+
+
+
