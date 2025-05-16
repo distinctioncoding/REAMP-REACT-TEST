@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../api/signin-api";
+import { useAuth } from "../contexts/AuthContext";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useAuth(); //  Context 里的 setUser
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,14 +16,15 @@ const SignInPage = () => {
       const data = await login({ email, password });
 
       localStorage.setItem("user", JSON.stringify(data));
+      setUser(data.user);
 
       const role = data.user.role;
       if (role === "Admin") {
-        navigate("/AgentPropertyPage");  // for testing, need to change when the dashboards finished
+        navigate("/dashboard");  // for testing, need to change when the dashboards finished
       } else if (role === "Agent") {
-        navigate("/agent/dashboard");
+        navigate("/AgentPropertyPage");
       } else if (role === "PhotographyCompany") {
-        navigate("/photography/dashboard");
+        navigate("/dashboard");
       } else {
         setError("Unknown user role");
       }
