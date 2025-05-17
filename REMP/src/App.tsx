@@ -63,16 +63,10 @@ function App() {
              <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
           </>
         } />
-
         <Route path="/dashboard" element={<DashboardLayout />}>
-
         </Route>
-
-
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
-
-
         <Route
           path="/hero-select"
           element={
@@ -83,9 +77,6 @@ function App() {
             />
           }
         />
-
-        <Route path="/dashboard">
-        </Route>
       </Routes>
     </BrowserRouter>
   );

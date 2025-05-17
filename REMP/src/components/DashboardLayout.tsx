@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import DashboardNavbar from './DashboardNavbar';
+// import ListingDashboard from './ListingDashboard'; // After merge
 
 const navItems = ['Listing', 'Agents', 'Photography companies'] as const;
 type ButtonType = typeof navItems[number];
@@ -10,6 +11,7 @@ const DashboardLayout = () => {
     switch (activeTab) {
       case 'Listing':
         return <div className="text-xl">This is the Listing Cases content.</div>;
+        // TODO: Replace with <ListingDashboard /> after merge
       case 'Agents':
         return <div className="text-xl">This is the Agents content.</div>;
       case 'Photography companies':
