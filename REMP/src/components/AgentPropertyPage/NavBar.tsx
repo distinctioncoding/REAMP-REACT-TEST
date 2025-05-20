@@ -17,7 +17,7 @@ const NavBar = () => {
     };
     fetchAgent()
   },[user?.email])
-  const userName = agent?.agentFirstName??"Unknown";
+  const userName = agent?.firstName??"Unknown";
   
   return (
     <nav className="w-full px-32 py-4 bg-white">
