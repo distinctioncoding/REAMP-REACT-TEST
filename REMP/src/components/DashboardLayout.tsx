@@ -1,11 +1,35 @@
 import { useState } from 'react';
 import DashboardNavbar from './DashboardNavbar';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
-const navItems = ['Listing', 'Agents', 'Photography companies'] as const;
-type ButtonType = typeof navItems[number];
+
+
+const allNavItems = ['Listing', 'Agents', 'Photography companies'] as const;
+type ButtonType = typeof allNavItems[number];
 
 const DashboardLayout = () => {
-  const [activeTab, setActiveTab] = useState<ButtonType>('Listing');
+  const navigate = useNavigate();
+
+  const { user } = useAuth();
+
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
+  if (user.role === 'Agent') {
+    navigate('/AgentPropertyPage');
+    return null;
+  }
+  let navItems: readonly ButtonType[] = [];
+  if (user.role === 'Admin') {
+    navItems = ['Listing', 'Agents', 'Photography companies'];
+  } else if (user.role === 'PhotographyCompany') {
+    navItems = ['Listing', 'Agents'];
+  }
+
+  const [activeTab, setActiveTab] = useState<ButtonType>(navItems[0]);
   const renderContent = () => {
     switch (activeTab) {
       case 'Listing':
