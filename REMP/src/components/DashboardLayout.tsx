@@ -2,6 +2,7 @@ import { useState } from 'react';
 import DashboardNavbar from './DashboardNavbar';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import AgentList from './AgentList/AgentList';
 
 
 
@@ -35,7 +36,7 @@ const DashboardLayout = () => {
       case 'Listing':
         return <div className="text-xl">This is the Listing Cases content.</div>;
       case 'Agents':
-        return <div className="text-xl">This is the Agents content.</div>;
+        return <div className="text-xl"><AgentList /></div>;
       case 'Photography companies':
         return <div className="text-xl">This is the Photography Companies content.</div>;
       default:

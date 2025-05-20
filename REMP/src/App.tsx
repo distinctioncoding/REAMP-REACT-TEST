@@ -41,7 +41,6 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
 
         </Route>
-        <Route path="/AgentList" element={<AgentList />}></Route>
 
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
