@@ -1,7 +1,24 @@
 import { CiSearch } from "react-icons/ci";
-const NavBar = () => {
-  const userName = "Jane Doe"; // Mock name, need to change after finish login,cause get name form login
+import { useAuth } from "../../contexts/AuthContext";
+import { getAgentByEmail } from "../../api/get-agent-by-email";
+import { useEffect, useState } from "react";
+import { Agent } from "../../interfaces/agent";
 
+
+const NavBar = () => {
+  const { user } = useAuth();
+  const [agent, setAgent] = useState<Agent | null>(null);
+  useEffect(()=>{
+    const fetchAgent = async()=>{
+      if(user?.email){
+        const result = await getAgentByEmail(user.email);
+        setAgent(result)
+      }
+    };
+    fetchAgent()
+  },[user?.email])
+  const userName = agent?.agentFirstName??"Unknown";
+  
   return (
     <nav className="w-full px-32 py-4 bg-white">
       <div className="text-sm text-gray-500 text-left">Hi, <span className="font-medium">{userName}</span></div>
