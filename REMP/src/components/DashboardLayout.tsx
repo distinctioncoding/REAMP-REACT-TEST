@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import DashboardNavbar from './DashboardNavbar';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
+import ListingDashboard from './ListingDashboard';
 
 
 const allNavItems = ['Listing', 'Agents', 'Photography companies'] as const;
@@ -10,18 +10,20 @@ type ButtonType = typeof allNavItems[number];
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
-
   const { user } = useAuth();
-
-  if (!user) {
-    navigate('/login');
-    return null;
+  
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    } else if (user.role === 'Agent') {
+      navigate('/AgentPropertyPage');
+    }
+  }, [user, navigate]);
+  
+  if (!user || user.role === 'Agent') {
+    return null; // don't render anything during redirection
   }
 
-  if (user.role === 'Agent') {
-    navigate('/AgentPropertyPage');
-    return null;
-  }
   let navItems: readonly ButtonType[] = [];
   if (user.role === 'Admin') {
     navItems = ['Listing', 'Agents', 'Photography companies'];
@@ -33,7 +35,7 @@ const DashboardLayout = () => {
   const renderContent = () => {
     switch (activeTab) {
       case 'Listing':
-        return <div className="text-xl">This is the Listing Cases content.</div>;
+        return <ListingDashboard />;
       case 'Agents':
         return <div className="text-xl">This is the Agents content.</div>;
       case 'Photography companies':
