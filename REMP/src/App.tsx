@@ -4,11 +4,12 @@ import CreateAgentModel from './components/CreateAgentModel'
 import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-import ListingDashboard from './components/ListingDashBoard';
+import ListingDashboard from './components/ListingDashboard';
 
 
 import HeroImageSelect from './components/HeroImageSelect';
 import DashboardLayout from './components/DashboardLayout';
+import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
@@ -19,10 +20,7 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 
-
-
 function App() {
-
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const closeModal = () => setModalVisible(false);
 
@@ -36,7 +34,6 @@ function App() {
              <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
           </>
         } />
-        </Route>
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/dashboard2" element={<DashboardLayout />} /> 
