@@ -4,11 +4,12 @@ import CreateAgentModel from './components/CreateAgentModel'
 import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-import ListingDashboard from './components/ListingDashBoard';
+import ListingDashboard from './components/ListingDashboard';
 
 
 import HeroImageSelect from './components/HeroImageSelect';
 import DashboardLayout from './components/DashboardLayout';
+import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
@@ -35,13 +36,14 @@ function App() {
              <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
              <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
           </>
-        } />
+        } >
         </Route>
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/dashboard2" element={<DashboardLayout />} /> 
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
+        <Route path="/agentspage" element={<AgentsPage/>} />
         <Route
           path="/hero-select"
           element={
