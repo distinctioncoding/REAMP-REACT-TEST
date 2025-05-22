@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getListingCases } from "../api/listing-api";
 import { ListingCase } from "../interfaces/listing-case";
+import { useNavigate } from 'react-router-dom';
 
 // Map backend enum values to readable labels
 const getPropertyTypeLabel = (type: number): string => {
@@ -111,16 +112,19 @@ const getStatusLabel = (status: number): string => {
 //     }, []);
 
 // API version
-    const ListingDashboard = () => {
-        const [listings, setListings] = useState<ListingCase[]>([]);
-
-        useEffect(() => {
-            getListingCases()
-                .then(setListings)
-                .catch((err) => {
-                    console.error("Failed to fetch listing cases:", err);
-                });
-        }, []);
+const ListingDashboard = () => {
+    const [listings, setListings] = useState<ListingCase[]>([]);
+    const navigate = useNavigate();
+    const handleViewDetails = (id: number) => {
+        navigate(`/property/${id}`);
+    };
+    useEffect(() => {
+        getListingCases()
+            .then(setListings)
+            .catch((err) => {
+                console.error("Failed to fetch listing cases:", err);
+            });
+    }, []);
 
     return (
         <div className="p-6">
@@ -154,13 +158,19 @@ const getStatusLabel = (status: number): string => {
                                     {getStatusLabel(item.listcaseStatus)}
                                 </span>
                             </td>
-                            <td className="px-4 py-2">...</td>
+                            <td className="px-4 py-2">
+                                <button
+                                    onClick={() => handleViewDetails(item.id)}
+                                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                                >
+                                    View Details
+                                </button>
+                            </td>
+
                         </tr>
                     ))}
                 </tbody>
             </table>
-
-
             <p className="mt-6 text-gray-500 italic">
                 Showing all current property listings...
             </p>
