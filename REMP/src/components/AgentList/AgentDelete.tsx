@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { deleteAgentById } from "../../api/delete-agent-api";
-
+import { deleteAgentById } from "../../api/agent/delete-agent-api";
 
 interface Props {
     agentId:string;
