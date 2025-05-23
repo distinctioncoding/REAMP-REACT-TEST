@@ -2,7 +2,8 @@ import { useState, useEffect} from 'react';
 import DashboardNavbar from './DashboardNavbar';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import ListingDashboard from './ListingDashboard';
+import AgentList from './AgentList/AgentList';
+
 
 
 const allNavItems = ['Listing', 'Agents', 'Photography companies'] as const;
@@ -37,7 +38,7 @@ const DashboardLayout = () => {
       case 'Listing':
         return <ListingDashboard />;
       case 'Agents':
-        return <div className="text-xl">This is the Agents content.</div>;
+        return <div className="text-xl"><AgentList /></div>;
       case 'Photography companies':
         return <div className="text-xl">This is the Photography Companies content.</div>;
       default:
