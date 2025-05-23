@@ -17,10 +17,12 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files?.[0]) {
-        setForm(prev => ({...prev, avatarImage: e.target.files![0] }))     //???
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm(prev => ({ ...prev, avatarImage: file }));
     }
-  }
+  };
+
 
   const handleSubmit = async() => {
     try{
@@ -38,12 +40,46 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
       <div className="bg-white p-6 rounded shadow w-full max-w-md">
         <h2 className="text-lg font-semibold mb-4">Edit Agent</h2>
         <div className="space-y-3">
-          <input name="agentFirstName" value={form.agentFirstName} onChange={handleChange} placeholder="First Name" className="input" />
-          <input name="agentLastName" value={form.agentLastName} onChange={handleChange} placeholder="Last Name" className="input" />
-          <input name="email" value={form.email} onChange={handleChange} placeholder="Email" className="input" />
-          <input name="phoneNumber" value={form.phoneNumber} onChange={handleChange} placeholder="Phone Number" className="input" />
-          <input name="companyName" value={form.companyName} onChange={handleChange} placeholder="Company" className="input" />
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+
+          <input 
+          name="agentFirstName" 
+          value={form.agentFirstName} 
+          onChange={handleChange} 
+          placeholder="First Name" 
+          className="input" />
+
+          <input name="agentLastName" 
+          value={form.agentLastName} 
+          onChange={handleChange} 
+          placeholder="Last Name" 
+          className="input" />
+
+          <input 
+          name="email" 
+          value={form.email} 
+          onChange={handleChange} 
+          placeholder="Email" 
+          className="input" />
+
+          <input 
+          name="phoneNumber" 
+          value={form.phoneNumber} 
+          onChange={handleChange} 
+          placeholder="Phone Number" 
+          className="input" />
+
+          <input 
+          name="companyName" 
+          value={form.companyName} 
+          onChange={handleChange} 
+          placeholder="Company" 
+          className="input" />
+
+          <input 
+          type="file" 
+          accept="image/*" 
+          onChange={handleFileChange} />
+          
         </div>
         <div className="mt-4 flex justify-end space-x-2">
           <button onClick={onClose} className="px-4 py-1 border rounded">Cancel</button>
