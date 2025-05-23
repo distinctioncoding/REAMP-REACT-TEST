@@ -1,19 +1,20 @@
-export interface Agent {
-    id:string;
-    firstName:string;
-    lastName:string;
-    email:string;
-    phoneNumber:string;
-    companyName:string;
-    avatarUrl?:string;
+interface BaseAgent {
+  id: string;
+  email: string;
+  phoneNumber: string;
+  companyName: string;
+  avatarUrl?: string;
 }
 
-export interface AgentByEmail {
-    id:string;
-    agentFirstName:string;
-    agentLastName:string;
-    email:string;
-    phoneNumber:string;
-    companyName:string;
-    avatarUrl?:string;
+interface FullName {
+  firstName: string;
+  lastName: string;
 }
+
+interface AgentNameByEmail {
+  agentFirstName: string;
+  agentLastName: string;
+}
+
+export type Agent = BaseAgent & FullName;
+export type AgentByEmail = BaseAgent & AgentNameByEmail;

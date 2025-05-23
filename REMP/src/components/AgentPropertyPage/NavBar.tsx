@@ -1,23 +1,9 @@
 import { CiSearch } from "react-icons/ci";
 import { useAuth } from "../../contexts/AuthContext";
-import { getAgentByEmail } from "../../api/get-agent-by-email";
-import { useEffect, useState } from "react";
-import { Agent } from "../../interfaces/agent";
-
 
 const NavBar = () => {
   const { user } = useAuth();
-  const [agent, setAgent] = useState<Agent | null>(null);
-  useEffect(()=>{
-    const fetchAgent = async()=>{
-      if(user?.email){
-        const result = await getAgentByEmail(user.email);
-        setAgent(result)
-      }
-    };
-    fetchAgent()
-  },[user?.email])
-  const userName = agent?.firstName??"Unknown";
+  const userName = user?.name ?? "Unknown";
   
   return (
     <nav className="w-full px-32 py-4 bg-white">

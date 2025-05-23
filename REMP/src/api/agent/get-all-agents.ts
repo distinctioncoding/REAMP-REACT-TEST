@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios"
-import { Agent } from "../interfaces/agent"
-import apiClient from "./apiClient"
+import { Agent } from "../../interfaces/agent";
+import apiClient from "../apiClient";
 
 export const getAllAgents = async():Promise<Agent[]> =>{
     const response : AxiosResponse<Agent[]> = await apiClient.get('User/GetAllAgents');

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { CiSearch } from 'react-icons/ci';
 import { Agent } from '../../interfaces/agent';
-import { getAllAgents } from '../../api/get-all-agents';
+import { getAllAgents } from '../../api/agent/get-all-agents';
 
 const AgentList = () => {
     const { user } = useAuth();

@@ -1,5 +1,6 @@
-import { Agent, AgentByEmail } from "../interfaces/agent";
-import apiClient from "./apiClient";
+import { Agent, AgentByEmail } from "../../interfaces/agent";
+import apiClient from "../apiClient";
+
 // getAllAgents和getAgentByEmail返回的json格式不用
 const mapToAgent = (data: AgentByEmail):Agent =>({
     id: data.id,
