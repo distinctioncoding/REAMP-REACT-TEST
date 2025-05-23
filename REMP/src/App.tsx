@@ -36,8 +36,7 @@ function App() {
              <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
              <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
           </>
-        } >
-        </Route>
+        } />
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/dashboard2" element={<DashboardLayout />} /> 
