@@ -10,7 +10,7 @@ interface Props {
 const AgentDeleteButton = ({ agentId, onDelete }:Props) => {
 
   const [confirming, setConfirming] = useState<boolean>(false);
-    const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
     const handleDelete = async () => {
     try {
