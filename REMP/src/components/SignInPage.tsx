@@ -14,9 +14,10 @@ const SignInPage = () => {
     e.preventDefault();
     try {
       const data = await login({ email, password });
-
       localStorage.setItem("user", JSON.stringify(data));
       setUser(data.user);
+      // console.log(JSON.parse(atob(data.token.split('.')[1])))
+
 
       const role = data.user.role;
       if (role === "Admin") {

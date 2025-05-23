@@ -3,7 +3,7 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const NavBar = () => {
   const { user } = useAuth();
-  const userName = user?.name ?? "Unknown";
+  const userName = user?.userName ?? "Unknown";
   
   return (
     <nav className="w-full px-32 py-4 bg-white">
