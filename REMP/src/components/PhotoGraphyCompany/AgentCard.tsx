@@ -1,8 +1,8 @@
 import React from 'react';
-import { AgentData } from '../../types/Agent';
+import { Agent } from '../../interfaces/agent';
 
 type Props = {
-    agent: AgentData;
+    agent: Agent;
 };
 
 const AgentCard: React.FC<Props> = ({ agent }) => {

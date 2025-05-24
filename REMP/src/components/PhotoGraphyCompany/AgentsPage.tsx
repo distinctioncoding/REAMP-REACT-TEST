@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { AgentData } from '../../types/Agent';
 import AgentCard from './AgentCard';
-import { getAgentsByCompany } from '../../api/AgentList-api';
+import { Agent } from '../../interfaces/agent';
+import { getAllAgents } from '../../api/agent/get-all-agents';
 
 
 const AgentsPage: React.FC = () => {
-  const [agents, setAgents] = useState<AgentData[]>([]);
+  const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
   const loadAgents = async () => {
     try {
-      const data = await getAgentsByCompany();
+      const data = await getAllAgents();
       setAgents(data);
     } catch (err: any) {
       setError(err.message || 'Failed to load agents');
