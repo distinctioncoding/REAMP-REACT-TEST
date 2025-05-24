@@ -2,13 +2,13 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CreateAgentModel from './components/CreateAgentModel'
 import { useState } from 'react';
-import SignInPage from './components/SignInPage';
-import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-import ListingDashboard from './components/ListingDashBoard';
+// import SignInPage from './components/SignInPage';
+// import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
+// import ListingDashboard from './components/ListingDashBoard';
 
 
-import HeroImageSelect from './components/HeroImageSelect';
-import DashboardLayout from './components/DashboardLayout';
+// import HeroImageSelect from './components/HeroImageSelect';
+// import DashboardLayout from './components/DashboardLayout';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
@@ -17,6 +17,7 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
   url: `https://picsum.photos/seed/${i}/150`
 }));
+
 
 
 
@@ -54,6 +55,8 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+
+    
   );
 }
 
