@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import CreateAgentModel from './components/CreateAgentModel'
+import CreateAgentModel from './components/AgentList/CreateAgentModel'
 import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
@@ -9,6 +9,7 @@ import ListingDashboard from './components/ListingDashboard';
 
 import HeroImageSelect from './components/HeroImageSelect';
 import AgentList from './components/AgentList/AgentList';
+import DashboardLayout from './components/DashboardLayout';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
@@ -40,6 +41,7 @@ function App() {
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/login" element={<SignInPage/>} />
+        <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route
           path="/hero-select"
           element={
