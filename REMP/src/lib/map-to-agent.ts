@@ -1,4 +1,4 @@
-import { Agent, AgentByEmail } from "../interfaces/agent";
+import { Agent, AgentByEmail } from "../interfaces/agent-response";
 
 // getAllAgents和getAgentByEmail返回的json格式不用
 export const mapToAgent = (data: AgentByEmail): Agent => ({

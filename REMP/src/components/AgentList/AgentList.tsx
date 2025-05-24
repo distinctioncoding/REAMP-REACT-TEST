@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { CiSearch } from 'react-icons/ci';
-import { Agent } from '../../interfaces/agent';
+import { Agent } from '../../interfaces/agent-response';
 import { searchAgent } from '../../api/agent/search-agent';
 import { getAllAgents } from '../../api/agent/get-all-agents';
+import CreateAgentModel from './CreateAgentModel';
 
 const AgentList = () => {
   const { user } = useAuth();
@@ -11,6 +12,8 @@ const AgentList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -58,14 +61,24 @@ const AgentList = () => {
           {!loading && searchTerm && agentLists.length === 0 && (
             <div className="absolute mt-1 left-0 bg-white shadow border p-2 w-full text-sm text-gray-500">
               No existing client, please try a new one or{" "}
-              <span className="text-blue-600 underline cursor-pointer">Create New Client</span>.
+              <span
+                className="text-blue-600 underline cursor-pointer"
+                onClick={() => setShowCreateModal(true)}
+              >
+                Create New Client
+            </span>
+
             </div>
           )}
         </div>
 
-        <button className="ml-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md whitespace-nowrap">
+        <button 
+          onClick={() => setShowCreateModal(true)}
+          className="ml-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md whitespace-nowrap"
+        >
           + Create New Client
         </button>
+
       </div>
 
       <table className="w-full table-auto border-collapse">
@@ -100,7 +113,19 @@ const AgentList = () => {
           ))}
         </tbody>
       </table>
+      {showCreateModal && (
+        <CreateAgentModel
+          isVisible={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreateSuccess={async () => {
+            const updated = await getAllAgents();
+            setAgentLists(updated);
+            setShowCreateModal(false);
+          }}
+        />
+      )}
     </div>
+    
   );
 };
 
