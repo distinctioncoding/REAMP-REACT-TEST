@@ -10,6 +10,7 @@ import ListingDashboard from './components/ListingDashboard';
 import HeroImageSelect from './components/HeroImageSelect';
 import DashboardLayout from './components/DashboardLayout';
 import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
+import AgentList from './components/AgentList/AgentList';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
@@ -36,8 +37,6 @@ function App() {
         } />
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
-        <Route path="/dashboard2" element={<DashboardLayout />} /> 
-        <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
         <Route
           path="/hero-select"
