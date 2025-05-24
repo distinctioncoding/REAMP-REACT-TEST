@@ -6,7 +6,7 @@ import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 import ListingDashboard from './components/ListingDashboard';
 
-
+import AgentList from './components/AgentList/AgentList';
 import HeroImageSelect from './components/HeroImageSelect';
 import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 
