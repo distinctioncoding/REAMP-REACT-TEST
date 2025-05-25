@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getListingCases } from "../api/listing-api";
-import { ListingCase } from "../interfaces/listing-case";
+import { getListingCases } from "../../api/listing-api";
+import { ListingCase } from "../../interfaces/listing-case";
 
 // Map backend enum values to readable labels
 const getPropertyTypeLabel = (type: number): string => {
@@ -22,93 +22,6 @@ const getStatusLabel = (status: number): string => {
     }
 };
 
-// Mock data version
-// const mockListingCases: ListingCase[] = [
-//     {
-//         id: 5,
-//         propertyType: 1,
-//         street: "",
-//         city: "",
-//         state: "",
-//         postcode: 0,
-//         createdAt: "2025-05-10T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-//     {
-//         id: 4,
-//         propertyType: 4,
-//         street: "17 Carl Street",
-//         city: "Brisbane",
-//         state: "Queensland",
-//         postcode: 4102,
-//         createdAt: "2025-05-10T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-//     {
-//         id: 2,
-//         propertyType: 3,
-//         street: "17 Carl Street",
-//         city: "Brisbane",
-//         state: "Queensland",
-//         postcode: 4102,
-//         createdAt: "2025-04-14T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-//     {
-//         id: 1,
-//         propertyType: 4,
-//         street: "88 Church Street",
-//         city: "Sydney",
-//         state: "NSW",
-//         postcode: 2000,
-//         createdAt: "2025-04-14T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-// ];
-// const ListingDashboard = () => {
-//     const [listings, setListings] = useState<ListingCase[]>([]);
-
-//     useEffect(() => {
-//         setTimeout(() => {
-//             setListings(mockListingCases);
-//         }, 500);
-//     }, []);
 
 // API version
     const ListingDashboard = () => {

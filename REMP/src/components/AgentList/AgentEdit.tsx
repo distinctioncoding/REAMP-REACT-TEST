@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { updateAgentForm } from '../../interfaces/agent-update'
-import { updateAgent } from '../../api/update-agent';
+import { updateAgent } from '../../api/agent/update-agent';
+
 
 interface Props {
     agent: updateAgentForm;
