@@ -6,6 +6,7 @@ import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 import ListingDashboard from './components/ListingDashboard';
 
+import PropertyModalContainer from './components/PropertyModalContainer';
 
 import HeroImageSelect from './components/HeroImageSelect';
 import AgentList from './components/AgentList/AgentList';
@@ -26,6 +27,9 @@ function App() {
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const closeModal = () => setModalVisible(false);
 
+  const [isPropertyModalVisible, setPropertyModalVisible] = useState(false);
+  const closePropertyModal = () => setPropertyModalVisible(false);
+
   return (
     <BrowserRouter>
       <Routes>
@@ -34,6 +38,13 @@ function App() {
             {/*  mock */}
              <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
              <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
+
+             <button onClick={() => setPropertyModalVisible(true)} className="ml-4">
+              Open Property Modal
+            </button>
+            {isPropertyModalVisible && (
+              <PropertyModalContainer onClose={closePropertyModal} />
+            )}
           </>
         } />
 

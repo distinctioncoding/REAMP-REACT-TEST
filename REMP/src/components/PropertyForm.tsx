@@ -6,6 +6,8 @@ import { SaleCategoryOptions } from "../enums/saleCategory";
 import { FaBed, FaBath, FaCar, FaRulerCombined } from 'react-icons/fa';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 
+import GooglePlacesAutocomplete from './GooglePlacesAutocomplete';
+
 type PropertyFormProps = {
 onClose: () => void;
 };
@@ -32,6 +34,7 @@ const handleChange = <K extends keyof PropertyData>(key: K, value: PropertyData[
 setFormData({ ...formData, [key]: value });
 };
 
+const [streetInput, setStreetInput] = useState('');
 
 type NumericKeys = 'bedrooms' | 'bathrooms' | 'garages' | 'floorArea';
 
@@ -39,6 +42,18 @@ type BasicItem = {
   key: NumericKeys;
   label: string;
   icon: React.ReactNode;
+};
+
+const handlePlaceSelect = (address: any) => {
+  console.log("📍 Selected Address:", address);
+  setStreetInput(address.street);
+
+  handleChange('street', address.street);
+  handleChange('city', address.city);
+  handleChange('state', address.state);
+  handleChange('postcode', Number(address.postcode));
+  handleChange('latitude', address.latitude);
+  handleChange('longitude', address.longitude);
 };
 
 const basicItems: BasicItem[] = [
@@ -141,60 +156,58 @@ return (
     {/* Address */}
     <div className="mb-6">
       <label className="block font-semibold mb-4">Address</label>
-      <label className="block font-semibold mb-1 text-gray-600">Street</label>
-        <input
-          type="text"
-          value={formData.street}
-          onChange={(e) => handleChange('street', e.target.value)}
-          placeholder="Enter street address"
-          className="w-full border px-3 h-14 rounded-lg"
-        />
+      <GooglePlacesAutocomplete
+        value={streetInput}
+        setStreet={setStreetInput}
+        onPlaceSelect={handlePlaceSelect}
+      />
+
     </div>
 
     {/* City, State, Postcode, Price */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div>
         <label className="block font-semibold mb-1 text-gray-600">City</label>
-          <input
-            type="text"
-            value={formData.city}
-            onChange={(e) => handleChange('city', e.target.value)}
-            placeholder="Enter city"
-            className="w-full border px-3 h-14 rounded-lg"
-          />
+        <input
+          type="text"
+          value={formData.city}
+          onChange={(e) => handleChange('city', e.target.value)}
+          placeholder="Enter city"
+          className="w-full border px-3 h-14 rounded-lg"
+        />
       </div>
 
       <div>
         <label className="block font-semibold mb-1 text-gray-600">State</label>
-          <input
-            type="text"
-            value={formData.state}
-            onChange={(e) => handleChange('state', e.target.value)}
-            placeholder="Enter state"
-            className="w-full border px-3 h-14 rounded-lg"
-          />
+        <input
+          type="text"
+          value={formData.state}
+          onChange={(e) => handleChange('state', e.target.value)}
+          placeholder="Enter state"
+          className="w-full border px-3 h-14 rounded-lg"
+        />
       </div>
 
       <div>
         <label className="block font-semibold mb-1 text-gray-600">Postcode</label>
-          <input
-            type="number"
-            value={formData.postcode === 0 ? '' : formData.postcode}
-            onChange={(e) => handleChange('postcode', Number(e.target.value))}
-            placeholder="Enter postcode"
-            className="w-full border px-3 h-14 rounded-lg"
-          />
+        <input
+          type="number"
+          value={formData.postcode === 0 ? '' : formData.postcode}
+          onChange={(e) => handleChange('postcode', Number(e.target.value))}
+          placeholder="Enter postcode"
+          className="w-full border px-3 h-14 rounded-lg"
+        />
       </div>
 
       <div>
         <label className="block font-semibold mb-1 text-gray-600">Price</label>
-          <input
-            type="number"
-            value={formData.price === 0 ? '' : formData.price}
-            onChange={(e) => handleChange('price', Number(e.target.value))}
-            placeholder="Enter price"
-            className="w-full border px-3 h-14 rounded-lg"
-          />
+        <input
+          type="number"
+          value={formData.price === 0 ? '' : formData.price}
+          onChange={(e) => handleChange('price', Number(e.target.value))}
+          placeholder="Enter price"
+          className="w-full border px-3 h-14 rounded-lg"
+        />
       </div>
     </div>
 
