@@ -8,7 +8,6 @@ import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyP
 
 
 import HeroImageSelect from './components/HeroImageSelect';
-import AgentList from './components/AgentList/AgentList';
 import ListingDashboard from './components/ListingDashBoard/ListingDashboard';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
