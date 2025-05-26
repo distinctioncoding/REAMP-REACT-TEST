@@ -13,5 +13,8 @@ export const updateAgent = async (form: updateAgentForm): Promise<void> => {
     formData.append("AvatarImage", form.avatarImage);
   }
 
-  await apiClient.put("/api/User/update-agent", formData);
+
+
+
+  await apiClient.put("User/update-agent", formData);
 };

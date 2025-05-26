@@ -4,6 +4,9 @@ import { CiSearch } from 'react-icons/ci';
 import { Agent } from '../../interfaces/agent';
 import { searchAgent } from '../../api/agent/search-agent';
 import { getAllAgents } from '../../api/agent/get-all-agents';
+import AgentEditDialog from './AgentEdit';
+import { mapAgentToUpdateForm } from '../../lib/map-to-agent';
+import AgentDeleteButton from './AgentDelete';
 
 const AgentList = () => {
   const { user } = useAuth();
@@ -11,6 +14,7 @@ const AgentList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -90,9 +94,24 @@ const AgentList = () => {
                   ⋯
                 </button>
                 {openMenuId === agent.id && (
-                  <div className="absolute right-0 top-8 z-10 bg-white border rounded shadow-md w-28 text-left">
-                    <button className="block w-full px-4 py-2 hover:bg-gray-100 text-sm text-gray-700">Edit</button>
-                    <button className="block w-full px-4 py-2 hover:bg-gray-100 text-sm text-red-500">Delete</button>
+                  <div className="absolute right-0 top-8 z-10 bg-white border rounded shadow-md text-left">
+                    <button 
+                      onClick={()=>{
+                      setEditingAgent(agent)
+                      setOpenMenuId(null)
+                      }} 
+                    className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
+                    >
+                      Edit
+                    </button>
+                    <AgentDeleteButton
+                      agentId={agent.id}
+                      onDelete={async () => {
+                        const updatedAgents = await getAllAgents();
+                        setAgentLists(updatedAgents);
+                        setOpenMenuId(null);
+                      }}
+                    />
                   </div>
                 )}
               </td>
@@ -100,6 +119,16 @@ const AgentList = () => {
           ))}
         </tbody>
       </table>
+      {editingAgent && (
+        <AgentEditDialog
+          agent={mapAgentToUpdateForm(editingAgent)}
+          onClose={() => setEditingAgent(null)}
+          onUpdate={async() => {
+          const updatedAgents = await getAllAgents();
+          setAgentLists(updatedAgents);
+          }}
+        />
+      )}
     </div>
   );
 };
