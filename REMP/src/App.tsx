@@ -10,6 +10,8 @@ import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 
 
 import HeroImageSelect from './components/HeroImageSelect';
+import DashboardLayout from './components/DashboardLayout';
+import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
 import AgentList from './components/AgentList/AgentList';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
@@ -21,10 +23,7 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 
-
-
 function App() {
-
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const closeModal = () => setModalVisible(false);
 
@@ -38,7 +37,6 @@ function App() {
              <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
           </>
         } />
-
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/login" element={<SignInPage/>} />
