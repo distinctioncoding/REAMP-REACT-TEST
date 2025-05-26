@@ -4,7 +4,9 @@ import CreateAgentModel from './components/CreateAgentModel'
 import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-import ListingDashboard from './components/ListingDashboard';
+
+import ListingDashboard from './components/ListingDashboard/ListingDashboard';
+
 
 
 import HeroImageSelect from './components/HeroImageSelect';
