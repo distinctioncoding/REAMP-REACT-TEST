@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { updateAgentForm } from "../../interfaces/agent-request"
 import apiClient from "../apiClient"
-=======
-import { updateAgentForm } from "../../interfaces/agent-update";
-import apiClient from "../apiClient";
->>>>>>> main
 
 export const updateAgent = async (form: updateAgentForm): Promise<void> => {
   const formData = new FormData();
@@ -18,11 +13,5 @@ export const updateAgent = async (form: updateAgentForm): Promise<void> => {
     formData.append("AvatarImage", form.avatarImage);
   }
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> main
   await apiClient.put("User/update-agent", formData);
 };
