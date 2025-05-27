@@ -19,14 +19,17 @@ export const useAuth = () => {
   }
   return context;
 };
-
+// const MyComponent = (props: { children: React.ReactNode }) => {
+//   const { children } = props;
+// }
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const raw = localStorage.getItem('user');
-  const initialUser: User | null = raw ? JSON.parse(raw)?.user ?? null : null;
+  const initialUser: User | null = raw ? JSON.parse(raw)?.user ?? null : null;//如果raw有值就解析他的user{ role: 'Agent', name: 'Alice' };，如果undefined，就返回null，如果raw无值，直接就是null
 
   const [user, setUser] = useState<User | null>(initialUser);
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    //是你传给上下文的实际“值”。它是一个对象，包含两个东西：user, setUser
+    <AuthContext.Provider value={{ user, setUser }}> 
       {children}
     </AuthContext.Provider>
   );

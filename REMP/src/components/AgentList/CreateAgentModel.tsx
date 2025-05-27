@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RxCross2 } from "react-icons/rx";
-import apiClient from '../api/apiClient';
+import apiClient from '../../api/apiClient';
 import axios from 'axios';
 
 interface CreateAgentModelProps {

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { getListingCases } from "../api/listing-api";
-import { ListingCase } from "../interfaces/listing-case";
 import { useNavigate } from 'react-router-dom';
+import { getListingCases } from "../../api/listing-api";
+import { ListingCase } from "../../interfaces/listing-case";
+import ListingUpdateDialog from "./ListingUpdate";
+
+
 
 // Map backend enum values to readable labels
 const getPropertyTypeLabel = (type: number): string => {
@@ -23,108 +26,22 @@ const getStatusLabel = (status: number): string => {
     }
 };
 
-// Mock data version
-// const mockListingCases: ListingCase[] = [
-//     {
-//         id: 5,
-//         propertyType: 1,
-//         street: "",
-//         city: "",
-//         state: "",
-//         postcode: 0,
-//         createdAt: "2025-05-10T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-//     {
-//         id: 4,
-//         propertyType: 4,
-//         street: "17 Carl Street",
-//         city: "Brisbane",
-//         state: "Queensland",
-//         postcode: 4102,
-//         createdAt: "2025-05-10T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-//     {
-//         id: 2,
-//         propertyType: 3,
-//         street: "17 Carl Street",
-//         city: "Brisbane",
-//         state: "Queensland",
-//         postcode: 4102,
-//         createdAt: "2025-04-14T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-//     {
-//         id: 1,
-//         propertyType: 4,
-//         street: "88 Church Street",
-//         city: "Sydney",
-//         state: "NSW",
-//         postcode: 2000,
-//         createdAt: "2025-04-14T00:00:00Z",
-//         listcaseStatus: 1,
-//         title: "",
-//         saleCategory: 0,
-//         price: 0,
-//         bedrooms: 0,
-//         bathrooms: 0,
-//         garages: 0,
-//         floorArea: 0,
-//         userId: "",
-//         isDeleted: false
-//     },
-// ];
-// const ListingDashboard = () => {
-//     const [listings, setListings] = useState<ListingCase[]>([]);
-
-//     useEffect(() => {
-//         setTimeout(() => {
-//             setListings(mockListingCases);
-//         }, 500);
-//     }, []);
-
-// API version
 const ListingDashboard = () => {
     const [listings, setListings] = useState<ListingCase[]>([]);
+    const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+    const [editingListing, setEditingListing] = useState<ListingCase | null>(null);
     const navigate = useNavigate();
     const handleViewDetails = (id: number) => {
         navigate(`/property/${id}`);
     };
-    useEffect(() => {
+
+    const fetchListings = () => {
         getListingCases()
             .then(setListings)
             .catch((err) => {
                 console.error("Failed to fetch listing cases:", err);
             });
-    }, []);
+    };
 
     return (
         <div className="p-6">
@@ -144,7 +61,7 @@ const ListingDashboard = () => {
                 </thead>
                 <tbody>
                     {listings.map((item) => (
-                        <tr key={item.id} className="border-b border-gray-300">
+                        <tr key={item.id} className="border-b border-gray-300 relative">
                             <td className="px-4 py-2 font-bold">#{item.id}</td>
                             <td className="px-4 py-2">{getPropertyTypeLabel(item.propertyType)}</td>
                             <td className="px-4 py-2">
@@ -166,7 +83,24 @@ const ListingDashboard = () => {
                                     View Details
                                 </button>
                             </td>
-
+                            <td className="px-4 py-2 relative">
+                                <button onClick={() => setOpenMenuId(openMenuId === item.id ? null : item.id)}>
+                                    ⋯
+                                </button>
+                                {openMenuId === item.id && (
+                                    <div className="absolute right-0 bottom-full mb-2 bg-white shadow border rounded z-50 w-28">
+                                        <button
+                                            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                            onClick={() => {
+                                                setEditingListing(item);
+                                                setOpenMenuId(null);
+                                            }}
+                                        >
+                                            Edit
+                                        </button>
+                                    </div>
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -174,6 +108,14 @@ const ListingDashboard = () => {
             <p className="mt-6 text-gray-500 italic">
                 Showing all current property listings...
             </p>
+
+            {editingListing && (
+                <ListingUpdateDialog
+                    listing={editingListing}
+                    onClose={() => setEditingListing(null)}
+                    onUpdated={fetchListings}
+                />
+            )}
         </div>
     );
 };

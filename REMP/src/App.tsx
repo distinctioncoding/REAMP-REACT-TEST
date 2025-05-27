@@ -1,15 +1,16 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import CreateAgentModel from './components/CreateAgentModel'
+import CreateAgentModel from './components/AgentList/CreateAgentModel'
 import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-import ListingDashboard from './components/ListingDashboard';
-
-
+import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 import HeroImageSelect from './components/HeroImageSelect';
 import DashboardLayout from './components/DashboardLayout';
 import PropertyDetails from './components/PropertyDetails';
+import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
+import AgentList from './components/AgentList/AgentList';
+
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
 // const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
@@ -20,10 +21,7 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 }));
 
 
-
-
 function App() {
-
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
   const closeModal = () => setModalVisible(false);
 
@@ -43,6 +41,7 @@ function App() {
         <Route path="/dashboard2" element={<DashboardLayout />} /> 
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
+        <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route
           path="/hero-select"
           element={

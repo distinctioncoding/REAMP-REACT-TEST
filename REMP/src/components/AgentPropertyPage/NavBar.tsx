@@ -1,10 +1,13 @@
 import { CiSearch } from "react-icons/ci";
-const NavBar = () => {
-  const userName = "Jane Doe"; // Mock name, need to change after finish login,cause get name form login
+import { useAuth } from "../../contexts/AuthContext";
 
+const NavBar = () => {
+  const { user } = useAuth();
+  const agentName = user?.agentName ?? "Unknown";
+  
   return (
     <nav className="w-full px-32 py-4 bg-white">
-      <div className="text-sm text-gray-500 text-left">Hi, <span className="font-medium">{userName}</span></div>
+      <div className="text-sm text-gray-500 text-left">Hi, <span className="font-medium">{agentName}</span></div>
 
       <div className="flex items-center justify-between mt-2">
         <h1 className="text-lg font-semibold text-gray-800">My Order</h1>

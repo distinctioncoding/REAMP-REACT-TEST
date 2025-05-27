@@ -16,6 +16,9 @@ export interface ListingCase {
   listcaseStatus: number;
   createdAt: string; 
   isDeleted: boolean;
+  description: string;
+  longitude: number;
+  latitude: number;
 }
 
 
