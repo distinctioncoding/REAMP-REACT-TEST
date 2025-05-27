@@ -6,6 +6,8 @@ import { searchAgent } from '../../api/agent/search-agent';
 import { getAllAgents } from '../../api/agent/get-all-agents';
 import CreateAgentModel from './CreateAgentModel';
 import AgentDeleteButton from './AgentDelete';
+import AgentEditDialog from './AgentEdit';
+import { mapAgentToUpdateForm } from '../../lib/map-to-agent';
 
 const AgentList = () => {
   const { user } = useAuth();
@@ -14,7 +16,7 @@ const AgentList = () => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
-
+  const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
 
   useEffect(() => {
     const fetchAgents = async () => {
@@ -45,9 +47,6 @@ const AgentList = () => {
     return () => clearTimeout(delay);
   }, [searchTerm]);
 
-  function setEditingAgent(agent: Agent) {
-    throw new Error('Function not implemented.');
-  }
 
   return (
     <div className="p-6">
@@ -133,6 +132,17 @@ const AgentList = () => {
           ))}
         </tbody>
       </table>
+      {editingAgent && (
+        <AgentEditDialog
+          agent={mapAgentToUpdateForm(editingAgent)}
+          onClose={() => setEditingAgent(null)}
+          onUpdate={async() => {
+          const updatedAgents = await getAllAgents();
+          setAgentLists(updatedAgents);
+          setEditingAgent(null);
+          }}
+        />
+      )}
       {showCreateModal && (
         <CreateAgentModel
           isVisible={showCreateModal}
