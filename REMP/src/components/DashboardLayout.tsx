@@ -2,8 +2,9 @@ import { useState, useEffect} from 'react';
 import DashboardNavbar from './DashboardNavbar';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import PhotographyCompanyDashboard from './PhotographyCompanyDashboard';
 import AgentList from './AgentList/AgentList';
-import ListingDashboard from './ListingDashboard';
+import ListingDashboard from './ListingDashBoard/ListingDashboard';
 
 
 
@@ -39,9 +40,9 @@ const DashboardLayout = () => {
       case 'Listing':
         return <ListingDashboard />;
       case 'Agents':
-        return <div className="text-xl"><AgentList /></div>;
+        return <AgentList />;
       case 'Photography companies':
-        return <div className="text-xl">This is the Photography Companies content.</div>;
+        return <PhotographyCompanyDashboard />;
       default:
         return <div className="text-xl">Welcome to the dashboard.</div>;
     }

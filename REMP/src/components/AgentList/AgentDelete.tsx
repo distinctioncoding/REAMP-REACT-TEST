@@ -28,7 +28,7 @@ const AgentDeleteButton = ({ agentId, onDelete }:Props) => {
     <div className="relative inline-block">
       <button
         onClick={() => setConfirming(true)}
-        className="block w-full text-left text-red-500 hover:bg-gray-100 px-4 py-2"
+        className="block w-full text-sm text-red-500 hover:bg-gray-100 px-4 py-2"
       >
         Delete
       </button>
