@@ -5,14 +5,10 @@ import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 
-import ListingDashboard from './components/ListingDashboard/ListingDashboard';
-
 
 
 import HeroImageSelect from './components/HeroImageSelect';
-import DashboardLayout from './components/DashboardLayout';
-import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
-import AgentList from './components/AgentList/AgentList';
+import ListingDashboard from './components/ListingDashBoard/ListingDashboard';
 import DashboardLayout from './components/DashboardLayout';
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
@@ -39,7 +35,6 @@ function App() {
           </>
         } />
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
-        <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route
