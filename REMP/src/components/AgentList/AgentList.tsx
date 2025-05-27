@@ -126,6 +126,24 @@ const AgentList = () => {
                         setOpenMenuId(null);
                       }}
                     />
+                  <div className="absolute right-0 top-8 z-10 bg-white border rounded shadow-md text-left">
+                    <button 
+                      onClick={()=>{
+                      setEditingAgent(agent)
+                      setOpenMenuId(null)
+                      }} 
+                    className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
+                    >
+                      Edit
+                    </button>
+                    <AgentDeleteButton
+                      agentId={agent.id}
+                      onDelete={async () => {
+                        const updatedAgents = await getAllAgents();
+                        setAgentLists(updatedAgents);
+                        setOpenMenuId(null);
+                      }}
+                    />
                   </div>
                 )}
               </td>

@@ -8,4 +8,5 @@ export const searchAgent = async (searchTerm: string): Promise<Agent[]> => {
   });
 
   return response.data.map((item: AgentByEmail) => mapEamilReturnToAgent(item));
+  return response.data.map((item: AgentByEmail) => mapEamilReturnToAgent(item));
 };

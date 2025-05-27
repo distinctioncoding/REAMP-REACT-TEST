@@ -77,6 +77,45 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
               className="w-full border rounded px-3 py-2"
             />
           </div>
+      <div className="bg-white p-8 rounded-md shadow-md w-full max-w-3xl">
+        <h2 className="text-xl font-semibold mb-6">Edit Client Information</h2>
+
+        <div className="grid grid-cols-2 gap-6">
+          {/* Last Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+            <input
+              name="agentLastName"
+              value={form.agentLastName}
+              onChange={handleChange}
+              placeholder="Last Name"
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+
+          {/* First Name */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+            <input
+              name="agentFirstName"
+              value={form.agentFirstName}
+              onChange={handleChange}
+              placeholder="First Name"
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+
+          {/* Email */}
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <input
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
 
           {/* Phone */}
           <div>

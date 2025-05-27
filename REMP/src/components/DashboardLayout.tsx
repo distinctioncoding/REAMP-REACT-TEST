@@ -3,6 +3,7 @@ import DashboardNavbar from './DashboardNavbar';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import PhotographyCompanyDashboard from './PhotographyCompanyDashboard';
+import PhotographyCompanyDashboard from './PhotographyCompanyDashboard';
 import AgentList from './AgentList/AgentList';
 import ListingDashboard from './ListingDashBoard/ListingDashboard';
 
@@ -41,7 +42,9 @@ const DashboardLayout = () => {
         return <ListingDashboard />;
       case 'Agents':
         return <AgentList />;
+        return <AgentList />;
       case 'Photography companies':
+        return <PhotographyCompanyDashboard />;
         return <PhotographyCompanyDashboard />;
       default:
         return <div className="text-xl">Welcome to the dashboard.</div>;

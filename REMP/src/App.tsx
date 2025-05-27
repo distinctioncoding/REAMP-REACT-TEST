@@ -29,6 +29,7 @@ function App() {
         <Route path="/AgentList" element={<AgentList />} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
+        <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route
           path="/hero-select"
           element={
@@ -41,6 +42,8 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+
+    
 
     
   );
