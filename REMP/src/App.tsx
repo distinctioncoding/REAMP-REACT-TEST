@@ -6,9 +6,8 @@ import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 
 
-
-import HeroImageSelect from './components/HeroImageSelect';
-import DashboardLayout from './components/DashboardLayout';
+// import HeroImageSelect from './components/HeroImageSelect';
+// import DashboardLayout from './components/DashboardLayout';
 
 
 // const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
@@ -49,6 +48,8 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+
+    
   );
 }
 
