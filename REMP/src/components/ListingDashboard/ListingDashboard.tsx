@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { getListingCases } from "../../api/listing-api";
 import { ListingCase } from "../../interfaces/listing-case";
+
 import ListingUpdateDialog from "./ListingUpdate";
+import DeleteListingButton from "./DeleteListing";
+
 
 
 // Map backend enum values to readable labels
@@ -24,6 +27,7 @@ const getStatusLabel = (status: number): string => {
     }
 };
 
+
 const ListingDashboard = () => {
     const [listings, setListings] = useState<ListingCase[]>([]);
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
@@ -36,6 +40,7 @@ const ListingDashboard = () => {
                 console.error("Failed to fetch listing cases:", err);
             });
     };
+
 
     useEffect(() => {
         fetchListings();
@@ -78,9 +83,9 @@ const ListingDashboard = () => {
                                     ⋯
                                 </button>
                                 {openMenuId === item.id && (
-                                    <div className="absolute right-0 bottom-full mb-2 bg-white shadow border rounded z-50 w-28">
+                                    <div className="absolute right-0 top-8 z-10 bg-white border rounded shadow-md text-left">
                                         <button
-                                            className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                            className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
                                             onClick={() => {
                                                 setEditingListing(item);
                                                 setOpenMenuId(null);
@@ -88,6 +93,15 @@ const ListingDashboard = () => {
                                         >
                                             Edit
                                         </button>
+                                        <DeleteListingButton
+                                          listingId={item.id}
+                                          onDelete={async () => {
+                                            const allListings = await getListingCases();
+                                            setListings(allListings);
+                                            setOpenMenuId(null)
+                                          }}
+
+                                        />
                                     </div>
                                 )}
                             </td>

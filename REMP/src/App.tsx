@@ -4,6 +4,15 @@ import CreateAgentModel from './components/AgentList/CreateAgentModel'
 import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
+
+
+// import HeroImageSelect from './components/HeroImageSelect';
+// import DashboardLayout from './components/DashboardLayout';
+
+import AgentList from './components/AgentList/AgentList';
+import HeroImageSelect from './components/HeroImageSelect';
+import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
+import DashboardLayout from './components/DashboardLayout';
 import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 import HeroImageSelect from './components/HeroImageSelect';
 import DashboardLayout from './components/DashboardLayout';
@@ -34,9 +43,9 @@ function App() {
           </>
         } />
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
-        <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
+        <Route path="/agentspage" element={<AgentsPage/>} />
         <Route
           path="/hero-select"
           element={
@@ -49,6 +58,8 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+
+    
   );
 }
 

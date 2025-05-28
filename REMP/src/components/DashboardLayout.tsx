@@ -8,6 +8,7 @@ import ListingDashboard from './ListingDashboard/ListingDashboard';
 
 
 
+
 const allNavItems = ['Listing', 'Agents', 'Photography companies'] as const;
 type ButtonType = typeof allNavItems[number];
 
@@ -40,9 +41,9 @@ const DashboardLayout = () => {
       case 'Listing':
         return <ListingDashboard />;
       case 'Agents':
-        return <PhotographyCompanyDashboard />;
+        return <AgentList />;
       case 'Photography companies':
-        return <div className="text-xl">This is the Photography Companies content.</div>;
+        return <PhotographyCompanyDashboard />;
       default:
         return <div className="text-xl">Welcome to the dashboard.</div>;
     }
