@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { getListingCases } from "../../api/listing-api";
 import { ListingCase } from "../../interfaces/listing-case";
 
 import ListingUpdateDialog from "./ListingUpdate";
 import DeleteListingButton from "./DeleteListing";
+
 
 
 
@@ -32,6 +34,10 @@ const ListingDashboard = () => {
     const [listings, setListings] = useState<ListingCase[]>([]);
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const [editingListing, setEditingListing] = useState<ListingCase | null>(null);
+    const navigate = useNavigate();
+    const handleViewDetails = (id: number) => {
+        navigate(`/property/${id}`);
+    };
 
     const fetchListings = () => {
         getListingCases()
@@ -40,7 +46,6 @@ const ListingDashboard = () => {
                 console.error("Failed to fetch listing cases:", err);
             });
     };
-
 
     useEffect(() => {
         fetchListings();
@@ -78,6 +83,14 @@ const ListingDashboard = () => {
                                     {getStatusLabel(item.listcaseStatus)}
                                 </span>
                             </td>
+                            <td className="px-4 py-2">
+                                <button
+                                    onClick={() => handleViewDetails(item.id)}
+                                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
+                                >
+                                    View Details
+                                </button>
+                            </td>
                             <td className="px-4 py-2 relative">
                                 <button onClick={() => setOpenMenuId(openMenuId === item.id ? null : item.id)}>
                                     ⋯
@@ -109,7 +122,6 @@ const ListingDashboard = () => {
                     ))}
                 </tbody>
             </table>
-
             <p className="mt-6 text-gray-500 italic">
                 Showing all current property listings...
             </p>
