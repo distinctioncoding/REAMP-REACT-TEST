@@ -5,15 +5,12 @@ import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 import ListingDashboard from './components/ListingDashboard/ListingDashboard';
-import HeroImageSelect from './components/HeroImageSelect';
-import DashboardLayout from './components/DashboardLayout';
 import PropertyDetails from './components/PropertyDetails';
 import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
 import AgentList from './components/AgentList/AgentList';
-
-
-// const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
-// const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
+import HeroImageSelect from './components/HeroImageSelect';
+import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
+import DashboardLayout from './components/DashboardLayout';
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
@@ -42,6 +39,7 @@ function App() {
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
+        <Route path="/agentspage" element={<AgentsPage/>} />
         <Route
           path="/hero-select"
           element={
@@ -54,6 +52,8 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+
+    
   );
 }
 
