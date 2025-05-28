@@ -1,5 +1,5 @@
-import { updateAgentForm } from "../interfaces/agent-update"
-import apiClient from "./apiClient"
+import { updateAgentForm } from "../../interfaces/agent-update";
+import apiClient from "../apiClient";
 
 export const updateAgent = async (form: updateAgentForm): Promise<void> => {
   const formData = new FormData();
@@ -13,5 +13,8 @@ export const updateAgent = async (form: updateAgentForm): Promise<void> => {
     formData.append("AvatarImage", form.avatarImage);
   }
 
-  await apiClient.put("/api/User/update-agent", formData);
+
+
+
+  await apiClient.put("User/update-agent", formData);
 };
