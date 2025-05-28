@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import PhotographyCompanyDashboard from './PhotographyCompanyDashboard';
 import AgentList from './AgentList/AgentList';
-import ListingDashboard from './ListingDashboard/ListingDashboard';
+import ListingDashboard from './ListingDashBoard/ListingDashboard';
 
 
 
