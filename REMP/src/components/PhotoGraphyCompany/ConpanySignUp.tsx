@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { photographySignUp } from '../../api/photography/signUp-api';
 
 const ConpanySignUpPage = () => {
-  const [companyName, setCompanyName] = useState('');
+  const [photographyCompanyName, setPhotographyCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
@@ -14,6 +15,18 @@ const ConpanySignUpPage = () => {
       if (password !== confirmPassword) {
           setError("Passwords do not match");
           return;
+      }
+
+      try {
+        await photographySignUp({
+        username: email, 
+        password,
+        email,
+        phoneNumber,
+        photographyCompanyName
+        });  
+      } catch (err){
+        setError("Sign up failed. Please try again.")
       }
   };
 
@@ -29,10 +42,10 @@ const ConpanySignUpPage = () => {
                     type="text"
                     className="w-full px-3 py-3 border border-gray-300 rounded"
                     id='comName'
-                    value={companyName}
+                    value={photographyCompanyName}
                     name='comName'
                     placeholder='Enter your company name'
-                    onChange={(e) => setCompanyName(e.target.value)}
+                    onChange={(e) => setPhotographyCompanyName(e.target.value)}
                     required
                 />
             </div>
@@ -98,6 +111,7 @@ const ConpanySignUpPage = () => {
             >
                 Sign Up
             </button>
+            {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
         </form>
     </div>
   )
