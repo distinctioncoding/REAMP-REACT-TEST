@@ -13,4 +13,11 @@ export const PropertyTypeOptions = [
   { label: "Villa", value: PropertyType.Villa },
   { label: "Others", value: PropertyType.Others },
 ];
-  
+
+export enum PropertyTypeEnum {
+  House = 1,
+  Unit = 2,
+  Townhouse = 3,
+  Villa = 4,
+  Others = 5,
+}
