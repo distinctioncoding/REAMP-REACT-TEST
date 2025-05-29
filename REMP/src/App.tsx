@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 
+
 import PropertyDetails from './components/PropertyDetails';
 import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
 import AgentList from './components/AgentList/AgentList';
@@ -34,7 +35,11 @@ function App() {
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
 
+
+        <Route path="/PropertyBanner" element={<PropertyBanner/>} />
+
         <Route path="/ConpanySignUpPage" element={<ConpanySignUpPage/>} />
+
 
         <Route path="/agentspage" element={<AgentsPage/>} />
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
