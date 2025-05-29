@@ -3,16 +3,14 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
 
-
-// import HeroImageSelect from './components/HeroImageSelect';
-// import DashboardLayout from './components/DashboardLayout';
-
-
-import HeroImageSelect from './components/HeroImageSelect';
+import ListingDashboard from './components/ListingDashboard/ListingDashboard';
+import PropertyDetails from './components/PropertyDetails';
+import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
 import AgentList from './components/AgentList/AgentList';
+import HeroImageSelect from './components/HeroImageSelect';
+import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 import DashboardLayout from './components/DashboardLayout';
-// const mockImages = Array.from({ length: 25 }, (_, i) => `https://picsum.photos/seed/${i}/150`);
-// const mockImages = Array.from({ length: 25 }, (_, i) => `/drop.webp?id=${i}`);
+
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
@@ -26,10 +24,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
-        <Route path="/AgentList" element={<AgentList />} />
+
+        <Route path="/dashboard" element={<ListingDashboard />} />
+        <Route path="/property/:listingId" element={<PropertyDetails />} />
+        <Route path="/dashboard2" element={<DashboardLayout />} /> 
+        <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
-        <Route path="/DashboardLayout" element={<DashboardLayout/>} />
+        <Route path="/agentspage" element={<AgentsPage/>} />
         <Route
           path="/hero-select"
           element={
