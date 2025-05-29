@@ -1,9 +1,8 @@
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import CreateAgentModel from './components/AgentList/CreateAgentModel'
-import { useState } from 'react';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
+
 import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 import PropertyDetails from './components/PropertyDetails';
 import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
@@ -13,6 +12,7 @@ import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 import DashboardLayout from './components/DashboardLayout';
 import AddAgentByEmail from './components/PhotoGraphyCompany/AddAgentByEmail';
 
+
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
   url: `https://picsum.photos/seed/${i}/150`
@@ -20,20 +20,12 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 
 
 function App() {
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const closeModal = () => setModalVisible(false);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={
-          <>
-            {/*  mock */}
-             <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
-             <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
-          </>
-        } />
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
+
         <Route path="/dashboard" element={<ListingDashboard />} />
         <Route path="/property/:listingId" element={<PropertyDetails />} />
         <Route path="/dashboard2" element={<DashboardLayout />} /> 
@@ -54,6 +46,8 @@ function App() {
         />
       </Routes>
     </BrowserRouter>
+
+    
 
     
   );
