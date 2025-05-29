@@ -1,4 +1,4 @@
-import { Agent} from "../../interfaces/agent";
+import { Agent } from "../../interfaces/agent-response";
 import { mapEamilReturnToAgent } from "../../lib/map-to-agent";
 import apiClient from "../apiClient";
 

@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
-import { updateAgentForm } from '../../interfaces/agent-update'
 import { updateAgent } from '../../api/agent/update-agent';
-
+import { updateAgentForm } from '../../interfaces/agent-request';
 
 interface Props {
-    agent: updateAgentForm;
-    onClose: () => void;
-    onUpdate: () => void;
+  agent: updateAgentForm;
+  onClose: () => void;
+  onUpdate: () => void;
 }
 
 const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
-  const [form, setForm] = useState<updateAgentForm>({ ...agent, avatarImage: null});
+  const [form, setForm] = useState<updateAgentForm>({ ...agent, avatarImage: null });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value}));  //基于上一次的 form 对象，更新其中一个字段（由 input 的 name 属性决定），其它字段不变
+    setForm(prev => ({ ...prev, [name]: value }));
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,17 +23,15 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
     }
   };
 
-
-  const handleSubmit = async() => {
-    try{
-        await updateAgent(form);
-        onUpdate();
-        onClose();
-    }catch(err){
-       console.error("Failed to update agent", err); 
+  const handleSubmit = async () => {
+    try {
+      await updateAgent(form);
+      onUpdate();
+      onClose();
+    } catch (err) {
+      console.error("Failed to update agent", err);
     }
   };
-
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
@@ -42,7 +39,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
         <h2 className="text-xl font-semibold mb-6">Edit Client Information</h2>
 
         <div className="grid grid-cols-2 gap-6">
-          {/* Last Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
             <input
@@ -54,7 +50,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
             />
           </div>
 
-          {/* First Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
             <input
@@ -66,7 +61,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
             />
           </div>
 
-          {/* Email */}
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
             <input
@@ -78,7 +72,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
             />
           </div>
 
-          {/* Phone */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
             <input
@@ -90,7 +83,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
             />
           </div>
 
-          {/* Company */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
             <input
@@ -102,7 +94,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
             />
           </div>
 
-          {/* Company Logo */}
           <div className="col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-2">Company Logo</label>
             <input type="file" accept="image/*" onChange={handleFileChange} />
@@ -133,8 +124,6 @@ const AgentEditDialog = ({ agent, onClose, onUpdate }: Props) => {
       </div>
     </div>
   );
-
 };
 
-
-export default AgentEditDialog
+export default AgentEditDialog;

@@ -1,5 +1,6 @@
-import { Agent, AgentByEmail } from "../interfaces/agent";
-import { updateAgentForm } from "../interfaces/agent-update";
+import { updateAgentForm } from "../interfaces/agent-request";
+import { Agent, AgentByEmail } from "../interfaces/agent-response";
+
 
 // getAllAgents和getAgentByEmail返回的json格式不用
 export const mapEamilReturnToAgent = (agent: AgentByEmail): Agent => ({
@@ -22,3 +23,4 @@ export const mapAgentToUpdateForm = (agent:Agent):updateAgentForm => ({
   agentLastName: agent.lastName,
   avatarImage: null,
 })
+
