@@ -19,7 +19,6 @@ const ConpanySignUpPage = () => {
 
       try {
         await photographySignUp({
-        username: email, 
         password,
         email,
         phoneNumber,
