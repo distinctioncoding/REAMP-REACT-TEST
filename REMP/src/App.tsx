@@ -14,6 +14,7 @@ import DashboardLayout from './components/DashboardLayout';
 import AddAgentByEmail from './components/PhotoGraphyCompany/AddAgentByEmail';
 
 
+
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
   url: `https://picsum.photos/seed/${i}/150`
@@ -34,7 +35,11 @@ function App() {
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
 
+
         <Route path="/PropertyBanner" element={<PropertyBanner/>} />
+
+        <Route path="/ConpanySignUpPage" element={<ConpanySignUpPage/>} />
+
 
         <Route path="/agentspage" element={<AgentsPage/>} />
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
