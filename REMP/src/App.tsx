@@ -11,6 +11,7 @@ import AgentList from './components/AgentList/AgentList';
 import HeroImageSelect from './components/HeroImageSelect';
 import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 import DashboardLayout from './components/DashboardLayout';
+import AddAgentByEmail from './components/PhotoGraphyCompany/AddAgentByEmail';
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
@@ -40,6 +41,7 @@ function App() {
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route path="/agentspage" element={<AgentsPage/>} />
+        <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
         <Route
           path="/hero-select"
           element={
@@ -58,6 +60,3 @@ function App() {
 }
 
 export default App;
-
-
-
