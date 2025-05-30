@@ -9,7 +9,10 @@ import AgentDeleteButton from './AgentDelete';
 import AgentEditDialog from './AgentEdit';
 import { mapAgentToUpdateForm } from '../../lib/map-to-agent';
 
-const AgentList = () => {
+interface AgentListProps {
+  scope?: 'company' | 'admin';
+}
+const AgentList = ({ scope }: AgentListProps) => {
   const { user } = useAuth();
   const [agentLists, setAgentLists] = useState<Agent[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
