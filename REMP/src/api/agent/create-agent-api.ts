@@ -1,9 +1,8 @@
-import { updateAgentForm } from "../interfaces/agent-update"
-import apiClient from "./apiClient"
+import { createAgentForm } from "../../interfaces/agent-request";
+import apiClient from "../apiClient";
 
-export const updateAgent = async (form: updateAgentForm): Promise<void> => {
+export const createAgentAccount = async(form:createAgentForm): Promise<void> => {
   const formData = new FormData();
-  formData.append("Id", form.id);
   formData.append("Email", form.email);
   formData.append("AgentFirstName", form.agentFirstName);
   formData.append("AgentLastName", form.agentLastName);
@@ -12,6 +11,5 @@ export const updateAgent = async (form: updateAgentForm): Promise<void> => {
   if (form.avatarImage) {
     formData.append("AvatarImage", form.avatarImage);
   }
-
-  await apiClient.put("/api/User/update-agent", formData);
+  await apiClient.post("User/CreateAgentAccount", formData);
 };
