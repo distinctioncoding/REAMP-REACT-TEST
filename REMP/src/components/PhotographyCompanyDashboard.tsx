@@ -1,56 +1,55 @@
 import { useEffect, useState } from 'react';
 import { PhotographyCompany } from '../interfaces/PhotographyCompany';
+import { getAllPhotographyCompanies } from '../api/photography/getAllPhotographyCompany';
 
 const PhotographyCompanyDashboard = () => {
   const [companies, setCompanies] = useState<PhotographyCompany[]>([]);
   const [loading, setLoading] = useState(true);
 
-//   useEffect(() => {
-//     const fetchCompanies = async () => {
-//       try {
-//         const response = await fetch('http://localhost:5873/api/photography-companies'); 
-//         const data = await response.json();
-//         setCompanies(data);
-//       } catch (err) {
-//         console.error('Failed to fetch photography companies:', err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchCompanies();
-//   }, []);
-
-//   if (loading) return <div>Loading...</div>;
-
-  useEffect(() => {
-    // MOCK DATA
-    const mockData: PhotographyCompany[] = [
-      {
-        id: '1',
-        photographyCompanyName: 'Sunset Studios',
-        user: {
-          id: 'u1',
-          email: 'studio@sunset.com'
-        }
-      },
-      {
-        id: '2',
-        photographyCompanyName: 'Ocean Lens',
-        user: {
-          id: 'u2',
-          email: 'contact@oceanlens.com'
-        }
+ useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const data = await getAllPhotographyCompanies();
+        setCompanies(data);
+      } catch (err) {
+        console.error('Failed to fetch companies:', err);
+      } finally {
+        setLoading(false);
       }
-    ];
+    };
 
-    const timer = setTimeout(() => {
-      setCompanies(mockData);
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
+    fetchCompanies();
   }, []);
+
+
+  // useEffect(() => {
+  //   // MOCK DATA
+  //   const mockData: PhotographyCompany[] = [
+  //     {
+  //       id: '1',
+  //       photographyCompanyName: 'Sunset Studios',
+  //       user: {
+  //         id: 'u1',
+  //         email: 'studio@sunset.com'
+  //       }
+  //     },
+  //     {
+  //       id: '2',
+  //       photographyCompanyName: 'Ocean Lens',
+  //       user: {
+  //         id: 'u2',
+  //         email: 'contact@oceanlens.com'
+  //       }
+  //     }
+  //   ];
+
+  //   const timer = setTimeout(() => {
+  //     setCompanies(mockData);
+  //     setLoading(false);
+  //   }, 1000);
+
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   if (loading) return <div>Loading...</div>;
 
