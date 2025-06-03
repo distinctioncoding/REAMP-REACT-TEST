@@ -5,9 +5,7 @@ import { ListingCase } from "../../interfaces/listing-case";
 
 import ListingUpdateDialog from "./ListingUpdate";
 import DeleteListingButton from "./DeleteListing";
-
-
-
+import ImageGallery from "../ImageGallery/ImageGallery";
 
 // Map backend enum values to readable labels
 const getPropertyTypeLabel = (type: number): string => {
@@ -37,6 +35,17 @@ const ListingDashboard = () => {
     const navigate = useNavigate();
     const handleViewDetails = (id: number) => {
         navigate(`/property/${id}`);
+    };
+
+    const mockImages = [
+       { id: '1', url: '/fish.jpg' },
+        { id: '2', url: '/drop.webp' },
+        { id: '3', url: '/pig.jpg' },
+    ];
+
+    const handleReorder = (newOrder: typeof mockImages) => {
+        console.log("Reordered images:", newOrder);
+        // In real use: call API to persist new order
     };
 
     const fetchListings = () => {
@@ -107,12 +116,12 @@ const ListingDashboard = () => {
                                             Edit
                                         </button>
                                         <DeleteListingButton
-                                          listingId={item.id}
-                                          onDelete={async () => {
-                                            const allListings = await getListingCases();
-                                            setListings(allListings);
-                                            setOpenMenuId(null)
-                                          }}
+                                            listingId={item.id}
+                                            onDelete={async () => {
+                                                const allListings = await getListingCases();
+                                                setListings(allListings);
+                                                setOpenMenuId(null)
+                                            }}
 
                                         />
                                     </div>
@@ -133,6 +142,11 @@ const ListingDashboard = () => {
                     onUpdated={fetchListings}
                 />
             )}
+            <div className="mt-10">
+                <h2 className="text-xl font-semibold mb-2">Test Image Gallery (Drag and Drop)</h2>
+                <ImageGallery images={mockImages} onReorder={handleReorder} />
+            </div>
+
         </div>
     );
 };
