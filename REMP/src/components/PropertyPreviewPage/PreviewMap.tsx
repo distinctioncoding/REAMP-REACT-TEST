@@ -33,7 +33,7 @@ const PreviewMap: React.FC<PreviewMapProps> = ({ title, lat, lon }) => {
   }, [lat, lon]);
 
   return (
-    <div className="bg-white py-4 border-b border-gray-300">
+    <div className="bg-white py-4 border-b-8 border-gray-100">
       <h2 className="text-center text-2xl font-bold mt-4 mb-1">{title}</h2>
       <div className="flex justify-center px-2 py-5">
         <div
