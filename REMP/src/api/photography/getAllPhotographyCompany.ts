@@ -1,7 +1,10 @@
-import { PhotographyCompany } from "../../interfaces/PhotographyCompany";
-import apiClient from "../apiClient";
+import { AxiosResponse } from 'axios';
+import apiClient from '../apiClient';
+import { PhotographyCompany } from '../../interfaces/PhotographyCompany';
 
 export const getAllPhotographyCompanies = async (): Promise<PhotographyCompany[]> => {
-  const res = await apiClient.get('/photography-company/GetAllPhotographyCompany');
+  const res: AxiosResponse<PhotographyCompany[]> = await apiClient.get(
+    '/User/GetAllPhotographyCompany'
+  );
   return res.data;
 };
