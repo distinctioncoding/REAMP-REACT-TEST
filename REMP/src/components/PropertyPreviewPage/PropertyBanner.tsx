@@ -8,22 +8,13 @@ import { getSaleCategory } from '../../lib/get-sales-category';
 import { SaleCategoryEnum } from '../../enums/saleCategory';
 import { PropertyTypeEnum } from '../../enums/propertyType';
 
-const PropertyBanner = () => {
-  const mockListing: Partial<ListingCase> = {
-    propertyType: 2,
-    saleCategory: 3,
-    street: "93 Beach Road",
-    city: "North Bondi",
-    state: "NSW",
-    postcode: 2026,
-    bedrooms: 2,
-    bathrooms: 2,
-    garages: 2,
-    floorArea: 2
-  };
+interface Props {
+  listing: Partial<ListingCase>; // 使用 Partial 兼容非必填字段
+}
+const PropertyBanner = ({listing} : Props) => {
 
-  const saleCategory = getSaleCategory(mockListing.saleCategory as SaleCategoryEnum);
-  const propertyType = getPropertyType(mockListing.propertyType as PropertyTypeEnum);
+  const saleCategory = getSaleCategory(listing.saleCategory as SaleCategoryEnum);
+  const propertyType = getPropertyType(listing.propertyType as PropertyTypeEnum);
 
   return (
     <div className="flex w-full">
@@ -45,9 +36,9 @@ const PropertyBanner = () => {
 
         {/* Address */}
         <div>
-          <h1 className="text-3xl font-semibold mb-2">{mockListing.street}</h1>
+          <h1 className="text-3xl font-semibold mb-2">{listing.street}</h1>
           <p className="text-lg text-gray-300 mb-6">
-            {mockListing.city}, {mockListing.state}, {mockListing.postcode}
+            {listing.city}, {listing.state}, {listing.postcode}
           </p>
         </div>
 
@@ -60,25 +51,25 @@ const PropertyBanner = () => {
             <div className="w-8 h-8 rounded-full border text-white flex items-center justify-center">
               <IoBedOutline size={20}/>
             </div>            
-            <span>{mockListing.bedrooms} Beds</span>
+            <span>{listing.bedrooms} Beds</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 rounded-full border text-white flex items-center justify-center">
               <LuBath size={20} />
             </div>             
-            <span>{mockListing.bathrooms} Baths</span>
+            <span>{listing.bathrooms} Baths</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 rounded-full border text-white flex items-center justify-center">
               <GiHomeGarage size={20} />
             </div>  
-            <span>{mockListing.garages} Garages</span>
+            <span>{listing.garages} Garages</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 rounded-full border text-white flex items-center justify-center">
               <RxRulerSquare size={20} />
             </div>
-            <span>{mockListing.floorArea} m²</span>
+            <span>{listing.floorArea} m²</span>
           </div>
         </div>
       </div>

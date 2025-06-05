@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import { getListingCases } from "../../api/listing-api";
+import { getListingCases } from "../../api/listingcase/listing-api";
 import { ListingCase } from "../../interfaces/listing-case";
 
 import ListingUpdateDialog from "./ListingUpdate";

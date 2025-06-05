@@ -2,7 +2,7 @@ import NavBar from "./NavBar"
 import PropertyCard from "./PropertyCard"
 import Sidebar, { ButtonType } from "./SideBar"
 import { useEffect, useState } from "react";
-import { getListingCases } from "../../api/listing-api";
+import { getListingCases } from "../../api/listingcase/listing-api";
 import { ListingCase } from "../../interfaces/listing-case";
 import { getStatusLabel } from "../../lib/get-status-label";
 export const AgentPropertyPage = () => {

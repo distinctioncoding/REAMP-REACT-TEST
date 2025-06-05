@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ListingCase } from "../../interfaces/listing-case";
-import { updateListing } from "../../api/listing-update";
+import { updateListing } from "../../api/listingcase/listing-update";
 
 interface Props {
   listing: ListingCase;
