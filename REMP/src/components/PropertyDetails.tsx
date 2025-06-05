@@ -16,62 +16,68 @@ const PropertyDetail = () => {
 
 
   useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        if (!listingId) return;
+    if (!listingId) return;
+    fetchAssets(Number(listingId));
+  }, [listingId]);
 
-        const listing = await getListingCaseDetail(Number(listingId));
-        const categorized = listing.mediaAssets;
+  const fetchAssets = async (id: number) => {
+    try {
+      const listing = await getListingCaseDetail(id);
+      const data = flattenMediaAssets(listing.mediaAssets);
+      const { status, pictureCount } = calculateMediaStatus(data);
 
-        const data: MediaAssetResponseDto[] = [
-          ...(categorized?.picture || []),
-          ...(categorized?.video || []),
-          ...(categorized?.floorPlan || []),
-          ...(categorized?.vrTour || [])
-        ];
+      setAssets(status);
+      setPictureCount(pictureCount);
+    } catch (err) {
+      console.error('Failed to fetch listing case or assets:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const status: ListingAssetStatus = {
-          photographyW: false,
-          photographyP: false,
-          floorPlan: false,
-          videography: false,
-          vrTour: false,
-        };
+  const flattenMediaAssets = (categorized: any): MediaAssetResponseDto[] => {
+    return [
+      ...(categorized?.picture || []),
+      ...(categorized?.video || []),
+      ...(categorized?.floorPlan || []),
+      ...(categorized?.vrTour || [])
+    ];
+  };
 
-        let pictureCount = 0;
-
-        for (const asset of data) {
-          switch (asset.mediaType) {
-            case 1:
-              pictureCount++;
-              if (pictureCount === 1) {
-                status.photographyW = true;
-              } else {
-                status.photographyP = true;
-              }
-              break;
-            case 2:
-              status.videography = true;
-              break;
-            case 3:
-              status.floorPlan = true;
-              break;
-            case 4:
-              status.vrTour = true;
-              break;
-          }
-        }
-        setPictureCount(pictureCount); // This is your final count
-        setAssets(status);
-      } catch (err) {
-        console.error('Failed to fetch listing case or assets:', err);
-      } finally {
-        setLoading(false);
-      }
+  const calculateMediaStatus = (assets: MediaAssetResponseDto[]) => {
+    const status: ListingAssetStatus = {
+      photographyW: false,
+      photographyP: false,
+      floorPlan: false,
+      videography: false,
+      vrTour: false,
     };
 
-    fetchAssets();
-  }, [listingId]);
+    let pictureCount = 0;
+
+    for (const asset of assets) {
+      switch (asset.mediaType) {
+        case 1: // Picture
+          pictureCount++;
+          if (pictureCount === 1) {
+            status.photographyW = true;
+          } else {
+            status.photographyP = true;
+          }
+          break;
+        case 2: // Video
+          status.videography = true;
+          break;
+        case 3: // FloorPlan
+          status.floorPlan = true;
+          break;
+        case 4: // VR Tour
+          status.vrTour = true;
+          break;
+      }
+    }
+    return { status, pictureCount };
+  };
 
 
 
