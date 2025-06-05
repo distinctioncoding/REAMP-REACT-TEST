@@ -30,7 +30,6 @@ function App() {
         <Route path="/ConpanySignUpPage" element={<ConpanySignUpPage/>} />
         <Route path="/agentspage" element={<AgentsPage/>} />
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
-        <Route path="/PreviewPage" element={<PreviewPage/>} />
         <Route path="/preview/:id" element={<PreviewPage />} />
 
         <Route
