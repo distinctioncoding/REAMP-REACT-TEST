@@ -1,180 +1,206 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Address } from '../types/Address';
 
-interface AutocompleteOptions {
-  types?: string[];
-  componentRestrictions?: { country: string };
-  fields?: string[];
-  bounds?: {
-    north: number;
-    south: number;
-    east: number;
-    west: number;
-  };
-  strictBounds?: boolean;
-}
-
 declare global {
   interface Window {
-    google: {
-      maps: {
-        importLibrary: (library: string) => Promise<any>;
-        places: {
-          Autocomplete: new (
-            input: HTMLInputElement,
-            options?: AutocompleteOptions
-          ) => any;
+    google?: {
+      maps?: {
+        importLibrary: (library: string) => Promise<{
           PlaceAutocompleteElement: new () => HTMLInputElement & {
-            place: any;
-            toPlace: () => Promise<any>;
+            toPlace?: () => Promise<any>;
             componentRestrictions: { country: string };
             fields: string[];
-            strictBounds: boolean;
-            bounds: { north: number; south: number; east: number; west: number; };
+            value: string;
           };
-        };
-        LatLngBounds: new (sw: any, ne: any) => any;
+        }>;
       };
     };
   }
 }
 
+let loadPromise: Promise<void> | null = null;
+
 interface GooglePlacesAutocompleteProps {
   country?: string;
-  types?: string[];
   onPlaceSelect?: (address: Address) => void;
   value: string;
   setStreet: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
-  country = 'au',
-  types = ['establishment', 'geocode'],
+  country = 'AU',
   onPlaceSelect,
   value,
   setStreet,
 }) => {
-  const autocompleteContainerRef = useRef<HTMLDivElement>(null);
-  const placeAutocompleteElementRef = useRef<any>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const elementRef = useRef<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+
+  const extractAddressComponent = (
+    components: Array<{ longText: string; shortText: string; types: string[] }> | undefined,
+    type: string
+  ): string => {
+    if (!components) return '';
+    const comp = components.find((c) => Array.isArray(c.types) && c.types.includes(type));
+    return comp ? comp.longText || comp.shortText || '' : '';
+  };
 
   useEffect(() => {
-    const loadGoogleMaps = async () => {
-      try {
-        await window.google.maps.importLibrary("places");
-        setIsLoaded(true);
-        setError(null);
-      } catch (error) {
-        console.error("Failed to load Google Maps:", error);
-        setError("Failed to load Google Maps");
-      }
-    };
+    if (loadPromise) return;
 
-    const existingScript = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
-    if (!window.google || !window.google.maps || !window.google.maps.importLibrary) {
+    if (!apiKey) {
+      setError('Google Maps API key is missing');
+      return;
+    }
+
+    loadPromise = new Promise<void>((resolve, reject) => {
+      const existingScript = document.querySelector<HTMLScriptElement>(
+        'script[src*="maps.googleapis.com/maps/api/js"]'
+      );
+
       if (!existingScript) {
         const script = document.createElement('script');
         script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&language=en&v=beta`;
         script.async = true;
         script.defer = true;
-        script.onload = () => loadGoogleMaps();
-        script.onerror = () => setError("Failed to load Google Maps");
+
+        script.onload = () => {
+          if (typeof window.google?.maps?.importLibrary === 'function') {
+            window.google.maps
+              .importLibrary('places')
+              .then(() => resolve())
+              .catch((err) => reject(err));
+          } else {
+            reject(new Error('google.maps.importLibrary not found'));
+          }
+        };
+
+        script.onerror = () => reject(new Error('Google Maps script load failed'));
         document.head.appendChild(script);
       } else {
-        existingScript.addEventListener('load', loadGoogleMaps);
+        const checkInterval = setInterval(() => {
+          if (typeof window.google?.maps?.importLibrary === 'function') {
+            clearInterval(checkInterval);
+            window.google.maps
+              .importLibrary('places')
+              .then(() => resolve())
+              .catch((err) => reject(err));
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          reject(new Error('importLibrary timeout'));
+        }, 10000);
       }
-    } else {
-      loadGoogleMaps();
-    }
+    });
+
+    loadPromise.catch((err) => {
+      setError(`Failed to load Google Maps: ${err.message}`);
+      loadPromise = null;
+    });
   }, [apiKey]);
 
-  const extractAddressComponent = (components: any[] | undefined, type: string): string => {
-    if (!components) return '';
-    const comp = components.find(c => c.types.includes(type));
-    return comp ? comp.long_name : '';
-  };
-
   useEffect(() => {
-    if (!isLoaded || !autocompleteContainerRef.current) return;
+    if (!loadPromise) return;
 
-    try {
-      const placeAutocompleteElement = document.createElement('gmp-place-autocomplete') as HTMLInputElement & {
-        types?: string[];
-        fields?: string[];
-        includedRegionCodes?: string[];
-        componentRestrictions?: { country: string };
-        bounds?: { north: number; south: number; east: number; west: number };
-        strictBounds?: boolean;
-        value?: string;
-      };
+    let gaEl: any;
+    let cleanupFn: (() => void) | null = null;
 
-      placeAutocompleteElementRef.current = placeAutocompleteElement;
+    loadPromise
+      .then(async () => {
+        if (!containerRef.current) return;
 
-      placeAutocompleteElement.includedRegionCodes = [country];
-
-      placeAutocompleteElement.fields = [
-        'address_components',
-        'formatted_address',
-        'geometry',
-        'name',
-        'place_id',
-        'displayName',
-        'location',
-      ];
-
-      while (autocompleteContainerRef.current.firstChild) {
-        autocompleteContainerRef.current.removeChild(autocompleteContainerRef.current.firstChild);
-      }
-      autocompleteContainerRef.current.appendChild(placeAutocompleteElement);
-
-      const handlePlaceSelect = (event: any) => {
         try {
-          const result = event.detail.place;
-          if (!result || !result.address_components || !result.geometry?.location) return;
+          const { PlaceAutocompleteElement } = await window.google!.maps!.importLibrary('places');
 
-          const streetNumber = extractAddressComponent(result.address_components, 'street_number');
-          const streetName = extractAddressComponent(result.address_components, 'route');
-          const city = extractAddressComponent(result.address_components, 'locality');
-          const state = extractAddressComponent(result.address_components, 'administrative_area_level_1');
-          const postcode = extractAddressComponent(result.address_components, 'postal_code');
+          gaEl = new PlaceAutocompleteElement() as any;
+          gaEl.componentRestrictions = { country };
+          gaEl.fields = ['addressComponents', 'formattedAddress', 'location', 'displayName'];
 
-          const address: Address = {
-            street: `${streetNumber} ${streetName}`.trim(),
-            city,
-            state,
-            postcode,
-            latitude: result.geometry.location.lat,
-            longitude: result.geometry.location.lng,
+          while (containerRef.current.firstChild) {
+            containerRef.current.removeChild(containerRef.current.firstChild);
+          }
+          containerRef.current.appendChild(gaEl);
+
+          const handlePlaceSelect = async (evt: any) => {
+            try {
+              const placePrediction = evt.placePrediction || evt?.detail?.placePrediction;
+              if (!placePrediction || typeof placePrediction.toPlace !== 'function') {
+                console.warn('Invalid place prediction received');
+                return;
+              }
+
+              const placeInstance = await placePrediction.toPlace();
+
+              await placeInstance.fetchFields({
+                fields: ['addressComponents', 'formattedAddress', 'location', 'displayName'],
+              });
+
+              const comps = placeInstance.addressComponents;
+              const streetNumber = extractAddressComponent(comps, 'street_number');
+              const streetName = extractAddressComponent(comps, 'route');
+              const city = extractAddressComponent(comps, 'locality');
+              const state = extractAddressComponent(comps, 'administrative_area_level_1');
+              const postcode = extractAddressComponent(comps, 'postal_code');
+              const formattedAddress = placeInstance.formattedAddress ?? '';
+
+              const latitude =
+                typeof placeInstance.location.lat === 'function'
+                  ? placeInstance.location.lat()
+                  : placeInstance.location.lat;
+              const longitude =
+                typeof placeInstance.location.lng === 'function'
+                  ? placeInstance.location.lng()
+                  : placeInstance.location.lng;
+
+              const address: Address = {
+                street: `${streetNumber} ${streetName}`.trim(),
+                city,
+                state,
+                postcode,
+                latitude,
+                longitude,
+                formattedAddress,
+              };
+
+              if (onPlaceSelect) onPlaceSelect(address);
+              setStreet(formattedAddress);
+              gaEl.setAttribute('data-user-selected', 'true');
+            } catch (err) {
+              console.error('handlePlaceSelect error:', err);
+              setError('Failed to process selected address');
+            }
           };
 
-          if (onPlaceSelect) {
-            onPlaceSelect(address);
-          }
-          setStreet(address.street);
+          gaEl.addEventListener('gmp-select', handlePlaceSelect);
+          elementRef.current = gaEl;
+
+          cleanupFn = () => {
+            if (gaEl) {
+              gaEl.removeEventListener('gmp-select', handlePlaceSelect);
+              if (containerRef.current?.contains(gaEl)) {
+                containerRef.current.removeChild(gaEl);
+              }
+            }
+          };
         } catch (err) {
-          console.error("Failed to handle selected place:", err);
+          console.error('Failed to initialize place autocomplete:', err);
+          setError('Failed to initialize address search');
         }
-      };
+      })
+      .catch((err) => setError(err.message));
 
-      placeAutocompleteElement.addEventListener('gmp-select', handlePlaceSelect);
-
-      return () => {
-        placeAutocompleteElement.removeEventListener('gmp-select', handlePlaceSelect);
-        if (autocompleteContainerRef.current?.contains(placeAutocompleteElement)) {
-          autocompleteContainerRef.current.removeChild(placeAutocompleteElement);
-        }
-      };
-    } catch (e) {
-      console.error("Initialization failed:", e);
-      setError("Failed to initialize Google component");
-    }
-  }, [isLoaded, country, types, onPlaceSelect, setStreet]);
+    return () => {
+      if (cleanupFn) cleanupFn();
+    };
+  }, [country, onPlaceSelect, setStreet]);
 
   useEffect(() => {
-    if (placeAutocompleteElementRef.current && value !== placeAutocompleteElementRef.current.value) {
-      placeAutocompleteElementRef.current.value = value;
+    const el = elementRef.current as any;
+    if (el && value && value !== el.value) {
+      el.value = value;
     }
   }, [value]);
 
@@ -182,14 +208,9 @@ const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
     <div className="w-full">
       <div className="mb-4">
         {error && (
-          <div className="p-2 bg-red-50 text-red-600 rounded-md mb-2 text-sm">
-            {error}
-          </div>
+          <div className="p-2 bg-red-50 text-red-600 rounded-md mb-2 text-sm">{error}</div>
         )}
-        <div
-          ref={autocompleteContainerRef}
-          className="pl-4 w-full border border-gray-300 bg-transparent rounded-md py-2 px-3 text-gray-700 focus-within:outline-none focus-within:ring-2 focus-within:ring-[#50B3E6]"
-        />
+        <div ref={containerRef} className="w-full" />
       </div>
     </div>
   );

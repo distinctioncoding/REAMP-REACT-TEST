@@ -5,4 +5,5 @@ export interface Address {
   postcode: string;
   latitude: number;
   longitude: number;
+  formattedAddress?: string;
 }
