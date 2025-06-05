@@ -28,6 +28,11 @@ const PreviewPage = () => {
       {listing && <PreviewInfo description={listing.description} />}
       {listing && <PreviewPhoto title="Preview Photo" imageUrls={listing.mediaAssets.picture.map((p) => p.mediaUrl)} />}
       {listing && <PreviewSingleMedia
+        title="Floor Plan"
+        mediaUrl={listing.mediaAssets.floorPlan[0]?.mediaUrl || ''}
+        mediaType="image"
+      />}
+      {listing && <PreviewSingleMedia
         title="Videography"
         mediaUrl={listing.mediaAssets.video[0]?.mediaUrl || ''}
         mediaType="video"
