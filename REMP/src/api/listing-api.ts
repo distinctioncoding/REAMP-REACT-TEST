@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ListingCase } from "../interfaces/listing-case"
+import { ListingCaseDetail } from "../interfaces/ListingCaseDetail"
 import apiClient from "./apiClient"
 
 /**
@@ -15,3 +16,8 @@ export const getListingCases = async():Promise<ListingCase[]> => {
   return response.data;
 }
 
+// Get one listing case by ID (with media assets)
+export const getListingCaseDetail = async (id: number): Promise<ListingCaseDetail> => {
+  const response: AxiosResponse<ListingCaseDetail> = await apiClient.get(`/ListingCase/${id}`);
+  return response.data;
+};

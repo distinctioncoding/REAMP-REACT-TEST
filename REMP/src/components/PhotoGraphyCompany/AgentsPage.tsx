@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AgentCard from './AgentCard';
-import { Agent } from '../../interfaces/agent';
+import { Agent } from '../../interfaces/agent-response';
 import { getAllAgents } from '../../api/agent/get-all-agents';
+
 
 
 const AgentsPage: React.FC = () => {

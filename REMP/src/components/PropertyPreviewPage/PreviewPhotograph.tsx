@@ -5,7 +5,7 @@ interface PreviewPhotoProps {
 
 const PreviewPhoto: React.FC<PreviewPhotoProps> = ({ title, imageUrl }) => {
   return (
-    <div className="bg-white py-4 border-b border-gray-300">
+    <div className="bg-white py-4 border-b-8 border-gray-100">
       <h2 className="text-center text-2xl font-bold mt-4 mb-2">{title}</h2>
 
       <div className="flex justify-center gap-4 px-2 py-10">
