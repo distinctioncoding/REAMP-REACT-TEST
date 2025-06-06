@@ -7,7 +7,9 @@ import ListingUpdateDialog from "./ListingUpdate";
 import DeleteListingButton from "./DeleteListing";
 
 
-
+interface ListingDashboardProps {
+  scope?: 'company' | 'admin';
+}
 
 // Map backend enum values to readable labels
 const getPropertyTypeLabel = (type: number): string => {
@@ -30,7 +32,7 @@ const getStatusLabel = (status: number): string => {
 };
 
 
-const ListingDashboard = () => {
+const ListingDashboard = ({scope}: ListingDashboardProps) => {
     const [listings, setListings] = useState<ListingCase[]>([]);
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const [editingListing, setEditingListing] = useState<ListingCase | null>(null);
