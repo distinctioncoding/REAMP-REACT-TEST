@@ -28,7 +28,7 @@ interface GooglePlacesAutocompleteProps {
 }
 
 const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
-  country = 'AU',
+  country = 'au',
   onPlaceSelect,
   value,
   setStreet,
@@ -116,7 +116,7 @@ const GooglePlacesAutocomplete: React.FC<GooglePlacesAutocompleteProps> = ({
           const { PlaceAutocompleteElement } = await window.google!.maps!.importLibrary('places');
 
           gaEl = new PlaceAutocompleteElement() as any;
-          gaEl.componentRestrictions = { country };
+          gaEl.includedRegionCodes = [country.toLowerCase()];
           gaEl.fields = ['addressComponents', 'formattedAddress', 'location', 'displayName'];
 
           while (containerRef.current.firstChild) {
