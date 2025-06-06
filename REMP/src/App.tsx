@@ -1,11 +1,8 @@
 import './App.css';
-import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-
-import PropertyModalContainer from './components/PropertyModalContainer';
-
+import PropertyDetails from './components/PropertyDetails';
 import HeroImageSelect from './components/HeroImageSelect';
 import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 import DashboardLayout from './components/DashboardLayout';
@@ -23,33 +20,12 @@ const mockImages = Array.from({ length: 25 }, (_, i) => ({
 
 function App() {
 
-  const [isModalVisible, setModalVisible] = useState<boolean>(false);
-  const closeModal = () => setModalVisible(false);
-
-  const [isPropertyModalVisible, setPropertyModalVisible] = useState(false);
-  const closePropertyModal = () => setPropertyModalVisible(false);
-
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={
-          <>
-            {/*  mock */}
-
-             <button onClick={() => setPropertyModalVisible(true)} className="ml-4">
-              Open Property Modal
-            </button>
-            {isPropertyModalVisible && (
-              <PropertyModalContainer 
-                isOpen={isPropertyModalVisible}
-                onClose={closePropertyModal} 
-              />
-            )}
-          </>
-        } />
-
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
+        <Route path="/property/:listingId" element={<PropertyDetails />} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route path="/ConpanySignUpPage" element={<ConpanySignUpPage/>} />
