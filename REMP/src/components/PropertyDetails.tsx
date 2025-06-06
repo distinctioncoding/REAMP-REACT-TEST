@@ -5,98 +5,84 @@ import { ListingAssetStatus } from '../interfaces/litsting-assets';
 import { BsCamera, BsCameraVideo, BsHouse } from 'react-icons/bs';
 import { FaVrCardboard } from 'react-icons/fa';
 import { HiOutlineDocumentSearch } from 'react-icons/hi';
+import { getListingCaseDetail } from '../api/listing-api';
 import { MediaAssetResponseDto } from '../interfaces/MediaAssetResponseDto';
 
 const PropertyDetail = () => {
   const { listingId } = useParams();
   const [assets, setAssets] = useState<ListingAssetStatus | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pictureCount, setPictureCount] = useState(0);
+
 
   useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        if (!listingId) return;
-
-        const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5181/api/MediaAsset/${listingId}/media`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`API error ${response.status}: ${errorText}`);
-        }
-
-        const data: MediaAssetResponseDto[] = await response.json();
-
-        const status: ListingAssetStatus = {
-          photographyW: false,
-          photographyP: false,
-          floorPlan: false,
-          videography: false,
-          vrTour: false,
-        };
-
-        let pictureCount = 0;
-
-        for (const asset of data) {
-          switch (asset.mediaType) {
-            case 'Picture':
-              pictureCount++;
-              if (pictureCount === 1) {
-                status.photographyW = true;
-              } else {
-                status.photographyP = true;
-              }
-              break;
-            case 'FloorPlan':
-              status.floorPlan = true;
-              break;
-            case 'Video':
-              status.videography = true;
-              break;
-            case 'VRTour':
-              status.vrTour = true;
-              break;
-          }
-        }
-
-        setAssets(status);
-      } catch (err) {
-        console.error('Failed to fetch listing media assets:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAssets();
+    if (!listingId) return;
+    fetchAssets(Number(listingId));
   }, [listingId]);
 
-  // mock data for testing
-  // useEffect(() => {
-  //   // Simulated mock data for testing UI
-  //   const mockStatus: ListingAssetStatus = {
-  //     photographyW: true,
-  //     photographyP: true,
-  //     floorPlan: true,
-  //     videography: true,
-  //     vrTour: false,
-  //   };
+  const fetchAssets = async (id: number) => {
+    try {
+      const listing = await getListingCaseDetail(id);
+      const data = flattenMediaAssets(listing.mediaAssets);
+      const { status, pictureCount } = calculateMediaStatus(data);
 
-  //   const timer = setTimeout(() => {
-  //     setAssets(mockStatus);
-  //     setLoading(false);
-  //   }, 500); 
+      setAssets(status);
+      setPictureCount(pictureCount);
+    } catch (err) {
+      console.error('Failed to fetch listing case or assets:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  //   return () => clearTimeout(timer);
-  // }, [listingId]);
+  const flattenMediaAssets = (categorized: any): MediaAssetResponseDto[] => {
+    return [
+      ...(categorized?.picture || []),
+      ...(categorized?.video || []),
+      ...(categorized?.floorPlan || []),
+      ...(categorized?.vrTour || [])
+    ];
+  };
+
+  const calculateMediaStatus = (assets: MediaAssetResponseDto[]) => {
+    const status: ListingAssetStatus = {
+      photographyW: false,
+      photographyP: false,
+      floorPlan: false,
+      videography: false,
+      vrTour: false,
+    };
+
+    let pictureCount = 0;
+
+    for (const asset of assets) {
+      switch (asset.mediaType) {
+        case 1: // Picture
+          pictureCount++;
+          if (pictureCount === 1) {
+            status.photographyW = true;
+          } else {
+            status.photographyP = true;
+          }
+          break;
+        case 2: // Video
+          status.videography = true;
+          break;
+        case 3: // FloorPlan
+          status.floorPlan = true;
+          break;
+        case 4: // VR Tour
+          status.vrTour = true;
+          break;
+      }
+    }
+    return { status, pictureCount };
+  };
+
 
 
   const assetBlocks = [
-    { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, },
+    { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, showCount: true },
     { label: 'Photography-P', key: 'photographyP', icon: <BsCamera className="text-orange-500 text-2xl" /> },
     { label: 'Floor Plan', key: 'floorPlan', icon: <HiOutlineDocumentSearch className="text-green-600 text-2xl" /> },
     { label: 'Videography', key: 'videography', icon: <BsCameraVideo className="text-gray-400 text-2xl" /> },
@@ -116,21 +102,20 @@ const PropertyDetail = () => {
           return (
             <div
               key={asset.key}
-              className={`w-40 h-40 flex flex-col items-center justify-center rounded-2xl transition-all
-                ${isAvailable
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-gray-100 text-gray-400'
-                }
-                hover:shadow-md
-              `}
+              className={`relative w-40 h-40 flex flex-col items-center justify-center rounded-2xl transition-all
+    ${isAvailable ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400'}
+    hover:shadow-md`}
             >
-              <div className="text-3xl mb-2">
-                {asset.icon}
-              </div>
-              <span className="text-lg font-semibold text-center">
-                {asset.label}
-              </span>
+              {asset.showCount && pictureCount > 0 && (
+                <span className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
+                  {pictureCount}
+                </span>
+              )}
+
+              <div className="text-3xl mb-2">{asset.icon}</div>
+              <span className="text-lg font-semibold text-center">{asset.label}</span>
             </div>
+
           );
         })}
       </div>
