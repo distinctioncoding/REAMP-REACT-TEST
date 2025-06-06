@@ -1,8 +1,8 @@
 import './App.css';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import SignInPage from './components/SignInPage';
 import { AgentPropertyPage } from './components/AgentPropertyPage/AgentPropertyPage';
-import ListingDashboard from './components/ListingDashboard';
 
 import PropertyModalContainer from './components/PropertyModalContainer';
 
@@ -35,21 +35,21 @@ function App() {
         <Route path="/" element={
           <>
             {/*  mock */}
-             <button onClick={()=>setModalVisible(true)}>Open Create Agent</button>
-             <CreateAgentModel isVisible={isModalVisible} onClose={closeModal}></CreateAgentModel>
 
              <button onClick={() => setPropertyModalVisible(true)} className="ml-4">
               Open Property Modal
             </button>
             {isPropertyModalVisible && (
-              <PropertyModalContainer onClose={closePropertyModal} />
+              <PropertyModalContainer 
+                isOpen={isPropertyModalVisible}
+                onClose={closePropertyModal} 
+              />
             )}
           </>
         } />
 
         <Route path="/AgentPropertyPage" element={<AgentPropertyPage/>} />
         <Route path="/dashboard" element={<ListingDashboard />} />
-        <Route path="/property/:listingId" element={<PropertyDetails />} />
         <Route path="/login" element={<SignInPage/>} />
         <Route path="/DashboardLayout" element={<DashboardLayout/>} />
         <Route path="/ConpanySignUpPage" element={<ConpanySignUpPage/>} />
