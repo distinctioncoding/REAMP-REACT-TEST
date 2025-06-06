@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CommonModal from './CommonModal';
 import PropertyForm from './PropertyForm';
 
-type PropertyModalContainerProps = {
+interface PropertyModalContainerProps {
+  isOpen: boolean;
   onClose: () => void;
-};
+}
 
-export default function PropertyModalContainer({ onClose }: PropertyModalContainerProps) {
+const PropertyModalContainer: React.FC<PropertyModalContainerProps> = ({ isOpen, onClose }) => {
   return (
     <CommonModal
-      isOpen={true}
+      isOpen={isOpen}
       onClose={onClose}
       title="Property details"
       subtitle="Please take a moment to review and complete property details"
@@ -18,4 +19,6 @@ export default function PropertyModalContainer({ onClose }: PropertyModalContain
       <PropertyForm onClose={onClose} />
     </CommonModal>
   );
-}
+};
+
+export default PropertyModalContainer;
