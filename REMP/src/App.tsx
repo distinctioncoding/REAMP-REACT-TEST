@@ -12,6 +12,7 @@ import DashboardLayout from './components/DashboardLayout';
 import AddAgentByEmail from './components/PhotoGraphyCompany/AddAgentByEmail';
 import ListingDashboard from './components/ListingDashBoard/ListingDashboard';
 import ConpanySignUpPage from './components/PhotoGraphyCompany/ConpanySignUp';
+import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
 import PreviewPage from './components/PropertyPreviewPage/PreviewPage';
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
