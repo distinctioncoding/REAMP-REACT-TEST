@@ -11,7 +11,10 @@ import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 import ConpanySignUpPage from './components/PhotoGraphyCompany/ConpanySignUp';
 import PhotographyCompanyPortal from './components/PhotoGraphyCompany/PhotographyCompanyPortal';
 import PreviewPage from './components/PropertyPreviewPage/PreviewPage';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 37f898ca05c8badc612a50c517a23b8b89e714d6
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
@@ -34,6 +37,10 @@ function App() {
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
         <Route path="/portal" element={<PhotographyCompanyPortal />} />
         <Route path="/PreviewPage" element={<PreviewPage/>} />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 37f898ca05c8badc612a50c517a23b8b89e714d6
 
         <Route
           path="/hero-select"
