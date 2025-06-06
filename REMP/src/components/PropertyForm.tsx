@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { PropertyData } from "../types/Property";
-import { createListing } from "../services/PropertyService";
-import { PropertyTypeOptions } from "../enums/propertyType";
-import { SaleCategoryOptions } from "../enums/saleCategory";
+import { PropertyData } from '../types/Property';
+import { createListing } from '../services/PropertyService';
+import { PropertyTypeOptions } from '../enums/propertyType';
+import { SaleCategoryOptions } from '../enums/saleCategory';
 import { FaBed, FaBath, FaCar, FaRulerCombined } from 'react-icons/fa';
 import { FiPlus, FiMinus } from 'react-icons/fi';
+import GooglePlacesAutocomplete from './GooglePlacesAutocomplete';
 
 type PropertyFormProps = {
-onClose: () => void;
+  onClose: () => void;
 };
+
+interface FormErrors {
+  title?: string;
+  price?: string;
+  address?: string;
+}
 
 const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
   const [formData, setFormData] = useState<PropertyData>({
@@ -28,253 +35,358 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
     floorArea: 0,
   });
 
-const handleChange = <K extends keyof PropertyData>(key: K, value: PropertyData[K]) => {
-setFormData({ ...formData, [key]: value });
-};
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const handleChange = <K extends keyof PropertyData>(
+    key: K,
+    value: PropertyData[K]
+  ) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+    // Clear error when field is modified
+    if (errors[key as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [key]: undefined }));
+    }
+  };
 
-type NumericKeys = 'bedrooms' | 'bathrooms' | 'garages' | 'floorArea';
+  const [streetInput, setStreetInput] = useState('');
 
-type BasicItem = {
-  key: NumericKeys;
-  label: string;
-  icon: React.ReactNode;
-};
+  const handlePlaceSelect = (address: {
+    street: string;
+    city: string;
+    state: string;
+    postcode: string;
+    latitude: number;
+    longitude: number;
+    formattedAddress?: string;
+  }) => {
+    const display = address.formattedAddress || address.street;
+    setStreetInput(display);
+    handleChange('street', display);
+    handleChange('city', address.city);
+    handleChange('state', address.state);
+    handleChange('postcode', Number(address.postcode));
+    handleChange('latitude', address.latitude);
+    handleChange('longitude', address.longitude);
+    
+    if (errors.address) {
+      setErrors((prev) => ({ ...prev, address: undefined }));
+    }
+  };
 
-const basicItems: BasicItem[] = [
-  { key: 'bedrooms', label: 'Bed', icon: <FaBed /> },
-  { key: 'bathrooms', label: 'Bath', icon: <FaBath /> },
-  { key: 'garages', label: 'Car', icon: <FaCar /> },
-  { key: 'floorArea', label: 'Area', icon: <FaRulerCombined /> },
-];
+  type NumericKeys = 'bedrooms' | 'bathrooms' | 'garages' | 'floorArea';
+  type BasicItem = {
+    key: NumericKeys;
+    label: string;
+    icon: React.ReactNode;
+  };
 
-const handleSave = async () => {
-  try {
-    const result = await createListing(formData);
-    console.log('Listing created successfully:', result);
-    onClose();
-  } catch (error) {
-    console.error('Failed to create listing:', error);
-  }
-};
+  const basicItems: BasicItem[] = [
+    { key: 'bedrooms', label: 'Bed', icon: <FaBed /> },
+    { key: 'bathrooms', label: 'Bath', icon: <FaBath /> },
+    { key: 'garages', label: 'Car', icon: <FaCar /> },
+    { key: 'floorArea', label: 'Area', icon: <FaRulerCombined /> },
+  ];
 
-return (
-  <form className="space-y-6 text-gray-800 dark:text-white">
-    {/* Property Title */}
-    <div>
-      <label className="block font-semibold mb-4">Property Title</label>
-      <input
-        type="text"
-        value={formData.title}
-        onChange={(e) => handleChange('title', e.target.value)}
-        placeholder="Enter property title"
-        className="w-full border px-3 h-14 rounded-lg"
-      />
-    </div>
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
 
-    <div className="border-b border-gray-200 pb-2 mb-8">
-      {/* Section Content */}
-    </div>
+    if (!formData.title.trim()) {
+      newErrors.title = 'Property title is required';
+    }
 
-    {/* Property Status */}
-    <div>
-      <label className="block font-semibold mb-4">Property Status</label>
-      <div className="flex gap-12">
-        {SaleCategoryOptions.map((option) => (
-          <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="saleCategory"
-              value={option.value}
-              checked={formData.saleCategory === option.value}
-              onChange={(e) => handleChange('saleCategory', Number(e.target.value))}
-              className="peer hidden"
-            />
-            <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition
-              ${formData.saleCategory === option.value
-                ? 'bg-gray-900 text-white border border-gray-900'
-                : 'bg-white border border-gray-400'}
-            `}>
-              {formData.saleCategory === option.value && '✔'}
-            </div>
-            <span>{option.label}</span>
-          </label>
-        ))}
+    if (formData.price <= 0) {
+      newErrors.price = 'Please enter a valid price';
+    }
+
+    if (!formData.street.trim()) {
+      newErrors.address = 'Property address is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSave = async () => {
+    if (isSubmitting) return;
+    setSubmitError(null);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const payload: PropertyData = {
+        ...formData,
+        postcode: Number(formData.postcode),
+        price: Number(formData.price),
+        bedrooms: Number(formData.bedrooms),
+        bathrooms: Number(formData.bathrooms),
+        garages: Number(formData.garages),
+        floorArea: Number(formData.floorArea),
+      };
+      await createListing(payload);
+      onClose();
+    } catch (error) {
+      console.error('Failed to create listing:', error);
+      setSubmitError('Failed to create listing. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form className="space-y-6 text-gray-800 dark:text-white" onSubmit={(e) => e.preventDefault()}>
+      <div>
+        <label className="block font-semibold mb-4">Property Title</label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => handleChange('title', e.target.value)}
+          placeholder="Enter property title"
+          className={`w-full border px-3 h-14 rounded-lg ${
+            errors.title ? 'border-red-500' : 'border-gray-300'
+          }`}
+        />
+        {errors.title && (
+          <p className="mt-1 text-sm text-red-500">{errors.title}</p>
+        )}
       </div>
-    </div>
 
-    <div className="border-b border-gray-200 pb-2 mb-8">
-      {/* Section Content */}
-    </div>
+      <div className="border-b border-gray-200 pb-2 mb-8" />
 
-    {/* Property Type */}
-    <div>
-      <label className="block font-semibold mb-4">Property Type</label>
-      <div className="flex flex-wrap gap-12">
-        {PropertyTypeOptions.map((option) => (
-          <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="radio"
-              name="propertyType"
-              value={option.value}
-              checked={formData.propertyType === option.value}
-              onChange={(e) => handleChange('propertyType', Number(e.target.value))}
-              className="peer hidden"
-            />
-            <div className={`w-6 h-6 rounded-lg flex items-center justify-center transition
-              ${formData.propertyType === option.value
-                ? 'bg-gray-900 text-white border border-gray-900'
-                : 'bg-white border border-gray-400'}
-            `}>
-              {formData.propertyType === option.value && '✔'}
-            </div>
-            <span>{option.label}</span>
-          </label>
-        ))}
+      <div>
+        <label className="block font-semibold mb-4">Property Status</label>
+        <div className="flex flex-wrap gap-6 md:gap-12">
+          {SaleCategoryOptions.map((option) => (
+            <label key={option.value} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="saleCategory"
+                value={option.value}
+                checked={formData.saleCategory === option.value}
+                onChange={(e) => handleChange('saleCategory', Number(e.target.value))}
+                className="peer hidden"
+              />
+              <div
+                className={`w-6 h-6 rounded-lg flex items-center justify-center transition ${
+                  formData.saleCategory === option.value
+                    ? 'bg-gray-900 text-white border border-gray-900'
+                    : 'bg-white border border-gray-400'
+                }`}
+              >
+                {formData.saleCategory === option.value && '✔'}
+              </div>
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </div>
       </div>
-    </div>
 
-    <div className="border-b border-gray-200 pb-2 mb-8">
-      {/* Section Content */}
-    </div>
+      <div className="border-b border-gray-200 pb-2 mb-8" />
 
-    {/* Address */}
-    <div className="mb-6">
-      <label className="block font-semibold mb-4">Address</label>
-      <label className="block font-semibold mb-1 text-gray-600">Street</label>
+      <div>
+        <label className="block font-semibold mb-4">Property Type</label>
+        <div className="flex flex-wrap gap-6 md:gap-12">
+          {PropertyTypeOptions.map((option) => (
+            <label key={option.value} className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="propertyType"
+                value={option.value}
+                checked={formData.propertyType === option.value}
+                onChange={(e) => handleChange('propertyType', Number(e.target.value))}
+                className="peer hidden"
+              />
+              <div
+                className={`w-6 h-6 rounded-lg flex items-center justify-center transition ${
+                  formData.propertyType === option.value
+                    ? 'bg-gray-900 text-white border border-gray-900'
+                    : 'bg-white border border-gray-400'
+                }`}
+              >
+                {formData.propertyType === option.value && '✔'}
+              </div>
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="border-b border-gray-200 pb-2 mb-8" />
+
+      <div className="mb-6">
+        <label className="block font-semibold mb-4">Address</label>
+        <GooglePlacesAutocomplete
+          value={streetInput}
+          setStreet={setStreetInput}
+          onPlaceSelect={handlePlaceSelect}
+          country="AU"
+        />
+        {errors.address && (
+          <p className="mt-1 text-sm text-red-500">{errors.address}</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label className="block font-semibold mb-1 text-gray-600">Street</label>
         <input
           type="text"
           value={formData.street}
-          onChange={(e) => handleChange('street', e.target.value)}
-          placeholder="Enter street address"
-          className="w-full border px-3 h-14 rounded-lg"
+          readOnly
+          placeholder="Street will be automatically filled"
+          className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
         />
-    </div>
+      </div>
 
-    {/* City, State, Postcode, Price */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-      <div>
-        <label className="block font-semibold mb-1 text-gray-600">City</label>
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label className="block font-semibold mb-1 text-gray-600">City</label>
           <input
             type="text"
             value={formData.city}
-            onChange={(e) => handleChange('city', e.target.value)}
-            placeholder="Enter city"
-            className="w-full border px-3 h-14 rounded-lg"
+            readOnly
+            placeholder="City will be automatically filled"
+            className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
           />
-      </div>
+        </div>
 
-      <div>
-        <label className="block font-semibold mb-1 text-gray-600">State</label>
+        <div>
+          <label className="block font-semibold mb-1 text-gray-600">State</label>
           <input
             type="text"
             value={formData.state}
-            onChange={(e) => handleChange('state', e.target.value)}
-            placeholder="Enter state"
-            className="w-full border px-3 h-14 rounded-lg"
+            readOnly
+            placeholder="State will be automatically filled"
+            className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
           />
+        </div>
       </div>
 
-      <div>
-        <label className="block font-semibold mb-1 text-gray-600">Postcode</label>
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label className="block font-semibold mb-1 text-gray-600">Postcode</label>
           <input
-            type="number"
+            type="text"
             value={formData.postcode === 0 ? '' : formData.postcode}
-            onChange={(e) => handleChange('postcode', Number(e.target.value))}
-            placeholder="Enter postcode"
-            className="w-full border px-3 h-14 rounded-lg"
+            readOnly
+            placeholder="Postcode will be automatically filled"
+            className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
           />
-      </div>
+        </div>
 
-      <div>
-        <label className="block font-semibold mb-1 text-gray-600">Price</label>
+        <div>
+          <label className="block font-semibold mb-1 text-gray-600">Price</label>
           <input
             type="number"
             value={formData.price === 0 ? '' : formData.price}
             onChange={(e) => handleChange('price', Number(e.target.value))}
             placeholder="Enter price"
-            className="w-full border px-3 h-14 rounded-lg"
+            className={`w-full border px-3 h-14 rounded-lg ${
+              errors.price ? 'border-red-500' : 'border-gray-300'
+            }`}
           />
+          {errors.price && (
+            <p className="mt-1 text-sm text-red-500">{errors.price}</p>
+          )}
+        </div>
       </div>
-    </div>
 
-    <div className="border-b border-gray-200 pb-2 mb-8">
-      {/* Section Content */}
-    </div>
+      <div className="border-b border-gray-200 pb-2 mb-8" />
 
-    {/* Basic Info */}
-    <div>
-      <label className="block font-semibold mb-4">Basic Information</label>
-      <div className="flex flex-wrap gap-4">
-        {basicItems.map((item) => (
-          <div key={item.key} className="bg-gray-100 rounded p-3 flex items-center justify-between" style={{ width: '250px', height: '80px' }}>
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-400">{item.icon}</div>
-              <span>{item.label}</span>
-            </div>
-
-            {item.key === 'floorArea' ? (
+      <div>
+        <label className="block font-semibold mb-4">Basic Information</label>
+        <div className="flex flex-wrap gap-4">
+          {basicItems.map((item) => (
+            <div
+              key={item.key}
+              className="bg-gray-100 rounded p-3 flex items-center justify-between"
+              style={{ width: '250px', height: '80px' }}
+            >
               <div className="flex items-center gap-2">
-                <input
-                  type="number"
-                  min={0}
-                  value={formData[item.key] as number}
-                  onChange={(e) => handleChange(item.key, Number(e.target.value))}
-                  className="w-16 border rounded text-center"
-                />
-                <span>m²</span>
+                <div className="w-6 h-6 flex items-center justify-center rounded-full border border-gray-400">
+                  {item.icon}
+                </div>
+                <span>{item.label}</span>
               </div>
-            ) : (
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  className="w-8 h-8 border rounded flex items-center justify-center"
-                  onClick={() =>
-                    handleChange(item.key, Math.max(0, (formData[item.key] as number) - 1))
-                  }
-                >
-                  <FiMinus />
-                </button>
 
-                <span className="min-w-[20px] text-center">{formData[item.key]}</span>
+              {item.key === 'floorArea' ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min={0}
+                    value={formData[item.key] as number}
+                    onChange={(e) =>
+                      handleChange(item.key, Number(e.target.value))
+                    }
+                    className="w-16 border rounded text-center"
+                  />
+                  <span>m²</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-4">
+                  <button
+                    type="button"
+                    className="w-8 h-8 border rounded flex items-center justify-center hover:bg-gray-200"
+                    onClick={() =>
+                      handleChange(
+                        item.key,
+                        Math.max(0, (formData[item.key] as number) - 1)
+                      )
+                    }
+                  >
+                    <FiMinus />
+                  </button>
 
-                <button
-                  type="button"
-                  className="w-8 h-8 border rounded flex items-center justify-center"
-                  onClick={() =>
-                    handleChange(item.key, (formData[item.key] as number) + 1)
-                  }
-                >
-                  <FiPlus />
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
+                  <span className="min-w-[20px] text-center">
+                    {formData[item.key]}
+                  </span>
+
+                  <button
+                    type="button"
+                    className="w-8 h-8 border rounded flex items-center justify-center hover:bg-gray-200"
+                    onClick={() =>
+                      handleChange(
+                        item.key,
+                        (formData[item.key] as number) + 1
+                      )
+                    }
+                  >
+                    <FiPlus />
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
 
-    {/* Footer Buttons */}
-    <div className="flex justify-end gap-4 p-5 border-t border-gray-200 dark:border-gray-700">
-      <button
-        type="button"
-        onClick={onClose}
-        className="flex items-center justify-center h-[44px] py-[14px] px-[36px] rounded-full border border-gray-500 text-gray-700 hover:bg-gray-100 gap-[10px]"
-        style={{ width: '122px' }}
-      >
-        Cancel
-      </button>
+      {submitError && (
+        <div className="p-3 bg-red-50 text-red-600 rounded-lg">{submitError}</div>
+      )}
 
-      <button
-        type="button"
-        onClick={handleSave}
-        className="flex items-center justify-center h-[44px] py-[14px] px-[36px] rounded-full bg-blue-500 text-white hover:bg-blue-600 gap-[10px]"
-        style={{ width: '122px' }}
-      >
-        Save
-      </button>
-    </div>
-  </form>
+      <div className="flex justify-end gap-4 p-5 border-t border-gray-200 dark:border-gray-700">
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex items-center justify-center h-[44px] py-[14px] px-[36px] rounded-full border border-gray-500 text-gray-700 hover:bg-gray-100 gap-[10px] disabled:opacity-50"
+          disabled={isSubmitting}
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSave}
+          className="flex items-center justify-center h-[44px] py-[14px] px-[36px] rounded-full bg-blue-500 text-white hover:bg-blue-600 gap-[10px] disabled:opacity-50"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Saving...' : 'Save'}
+        </button>
+      </div>
+    </form>
   );
 };
 
