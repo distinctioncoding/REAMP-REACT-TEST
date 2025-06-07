@@ -5,8 +5,9 @@ import { ListingAssetStatus } from '../interfaces/litsting-assets';
 import { BsCamera, BsCameraVideo, BsHouse } from 'react-icons/bs';
 import { FaVrCardboard } from 'react-icons/fa';
 import { HiOutlineDocumentSearch } from 'react-icons/hi';
-import { getListingCaseDetail } from '../api/listing-api';
+
 import { MediaAssetResponseDto } from '../interfaces/MediaAssetResponseDto';
+import { getListingCaseDetail } from '../api/listingcase/listing-api';
 
 const PropertyDetail = () => {
   const { listingId } = useParams();
