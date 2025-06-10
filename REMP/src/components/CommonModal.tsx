@@ -32,7 +32,7 @@ export default function CommonModal({
   const selectedWidthClass = widthClass[size];
 
   return createPortal(
-    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/70 overflow-y-auto">
       <div className={`w-full bg-white dark:bg-gray-800 rounded-lg shadow relative ${selectedWidthClass} flex flex-col max-h-[90vh]`}>
         
         {/* Header */}
@@ -41,16 +41,16 @@ export default function CommonModal({
             <FaTimes className="w-6 h-6" />
           </button>
           <div className="pr-10">
-            <h3 className="text-[24px] font-bold text-gray-800">{title}</h3>
-            {subtitle && <p className="text-[18px] text-gray-600">{subtitle}</p>}
+            <h3 className="text-[24px] font-bold text-gray-800 dark:text-white">{title}</h3>
+            {subtitle && <p className="text-[18px] text-gray-600 dark:text-gray-300">{subtitle}</p>}
           </div>
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto flex-1 p-5">{children}</div>
+        <div className="overflow-y-auto flex-1 p-5 bg-white dark:bg-gray-800">{children}</div>
 
       </div>
     </div>,
     document.body
-  );
+);
 }

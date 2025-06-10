@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { getListingCases } from "../../api/listing-api";
 import { ListingCase } from "../../interfaces/listing-case";
+import PropertyModalContainer from "../PropertyModalContainer"
 
 import ListingUpdateDialog from "./ListingUpdate";
 import DeleteListingButton from "./DeleteListing";
@@ -34,6 +35,7 @@ const getStatusLabel = (status: number): string => {
 
 const ListingDashboard = ({scope}: ListingDashboardProps) => {
     const [listings, setListings] = useState<ListingCase[]>([]);
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const [editingListing, setEditingListing] = useState<ListingCase | null>(null);
     const navigate = useNavigate();
@@ -57,6 +59,12 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
         <div className="p-6">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Display all ListingCases in dashboard</h1>
+                <button
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                >
+                    + Create New Property
+                </button>
             </div>
             <table className="w-full text-left border-collapse shadow-sm rounded-lg overflow-hidden text-gray-700 font-medium">
                 <thead className="bg-gray-100 border-b-2 border-gray-300">
@@ -115,7 +123,6 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
                                             setListings(allListings);
                                             setOpenMenuId(null)
                                           }}
-
                                         />
                                     </div>
                                 )}
@@ -127,6 +134,13 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
             <p className="mt-6 text-gray-500 italic">
                 Showing all current property listings...
             </p>
+            <PropertyModalContainer
+                isOpen={isCreateModalOpen}
+                onClose={() => {
+                    setIsCreateModalOpen(false);
+                    fetchListings();
+                }}
+            />
 
             {editingListing && (
                 <ListingUpdateDialog
