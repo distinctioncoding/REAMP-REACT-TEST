@@ -33,7 +33,7 @@ function App() {
         <Route path="/agentspage" element={<AgentsPage/>} />
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
         <Route path="/portal" element={<PhotographyCompanyPortal />} />
-        <Route path="/PreviewPage" element={<PreviewPage/>} />
+        <Route path="/preview/:id" element={<PreviewPage />} />
         <Route path="/ChangePasswordPage" element={<ChangePasswordPage/>} />
 
         <Route

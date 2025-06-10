@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteListingCaseById } from "../../api/listing-delete";
+import { deleteListingCaseById } from "../../api/listingcase/listing-delete";
 
 interface Props {
     listingId: number;

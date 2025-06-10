@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
-import { ListingCase } from "../interfaces/listing-case"
-import { ListingCaseDetail } from "../interfaces/ListingCaseDetail"
-import apiClient from "./apiClient"
+import { ListingCase, ListingCaseDetail } from "../../interfaces/listing-case";
+import apiClient from "../apiClient";
+
 
 /**
  * Retrieves all listing cases.
