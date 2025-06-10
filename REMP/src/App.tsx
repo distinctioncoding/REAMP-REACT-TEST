@@ -11,6 +11,7 @@ import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 import ConpanySignUpPage from './components/PhotoGraphyCompany/ConpanySignUp';
 import PhotographyCompanyPortal from './components/PhotoGraphyCompany/PhotographyCompanyPortal';
 import PreviewPage from './components/PropertyPreviewPage/PreviewPage';
+import ChangePasswordPage from './components/AgentPropertyPage/ChangePasswordPage';
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
   id: `${i}`,
@@ -33,6 +34,7 @@ function App() {
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
         <Route path="/portal" element={<PhotographyCompanyPortal />} />
         <Route path="/PreviewPage" element={<PreviewPage/>} />
+        <Route path="/ChangePasswordPage" element={<ChangePasswordPage/>} />
 
         <Route
           path="/hero-select"
