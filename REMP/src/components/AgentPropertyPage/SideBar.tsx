@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 interface SidebarProps {
   selected: ButtonType;
   onSelect: (status: ButtonType) => void;
@@ -6,11 +8,13 @@ interface SidebarProps {
 const buttons = ['All', 'Created', 'Pending', 'Delivered'] as const;
 export type ButtonType = typeof buttons[number];
 
-function Sidebar({selected,onSelect}:SidebarProps) {
-  
-  return(
-    <aside className="w-48 bg-gray-50 p-4 rounded-md min-h-screen">
-      {buttons.map((button) => (
+function Sidebar({ selected, onSelect }: SidebarProps) {
+  const navigate = useNavigate();
+
+  return (
+    <aside className="flex flex-col w-48 bg-gray-50 p-4 rounded-md">
+      <div className="flex flex-col space-y-1">
+        {buttons.map((button) => (
         <button
           key={button}
           onClick={() => {
@@ -22,10 +26,17 @@ function Sidebar({selected,onSelect}:SidebarProps) {
         >
           {button}
         </button>
-      ))}
+        ))}
+      </div>
+
+      <button
+        onClick={() => navigate('/ChangePasswordPage')}
+        className="w-full px-4 py-2 rounded mt-1 font-medium transition-colors duration-200 text-gray-800 hover:bg-gray-100"
+      >
+        Change Password
+      </button>
     </aside>
   );
 }
 
 export default Sidebar;
-

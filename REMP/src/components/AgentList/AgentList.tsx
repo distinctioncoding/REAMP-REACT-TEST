@@ -8,8 +8,12 @@ import CreateAgentModel from './CreateAgentModel';
 import AgentDeleteButton from './AgentDelete';
 import AgentEditDialog from './AgentEdit';
 import { mapAgentToUpdateForm } from '../../lib/map-to-agent';
+import { getAgentsByCompany } from '../../api/agent-api';
 
-const AgentList = () => {
+interface AgentListProps {
+  scope?: 'company' | 'admin';
+}
+const AgentList = ({ scope }: AgentListProps) => {
   const { user } = useAuth();
   const [agentLists, setAgentLists] = useState<Agent[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,20 +21,32 @@ const AgentList = () => {
   const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingAgent, setEditingAgent] = useState<Agent | null>(null);
+  const fetchScopedAgents = async () => {
+    return scope === "company" ? await getAgentsByCompany() : await getAllAgents();
+  };
+
+
+  useEffect(() => {
+    fetchScopedAgents()
+      .then(setAgentLists)
+      .catch((err) => {
+        console.error("Failed to fetch agents:", err);
+      });
+  }, [scope]);
+
 
   useEffect(() => {
     const fetchAgents = async () => {
       if (!searchTerm.trim()) {
         try {
-            const result = await getAllAgents();
-            setAgentLists(result);
+          const result = await fetchScopedAgents();
+          setAgentLists(result);
         } catch (err) {
-            console.error("Failed to fetch all agents", err);
-            setAgentLists([]);
+          console.error("Failed to fetch all agents", err);
+          setAgentLists([]);
         }
         return;
-    }
-
+      }
       setLoading(true);
       try {
         const result = await searchAgent(searchTerm);
@@ -70,13 +86,13 @@ const AgentList = () => {
                 onClick={() => setShowCreateModal(true)}
               >
                 Create New Client
-            </span>
+              </span>
 
             </div>
           )}
         </div>
 
-        <button 
+        <button
           onClick={() => setShowCreateModal(true)}
           className="ml-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md whitespace-nowrap"
         >
@@ -108,19 +124,19 @@ const AgentList = () => {
                 </button>
                 {openMenuId === agent.id && (
                   <div className="absolute right-0 top-8 z-10 bg-white border rounded shadow-md text-left">
-                    <button 
-                      onClick={()=>{
-                      setEditingAgent(agent)
-                      setOpenMenuId(null)
-                      }} 
-                    className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
+                    <button
+                      onClick={() => {
+                        setEditingAgent(agent)
+                        setOpenMenuId(null)
+                      }}
+                      className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
                     >
                       Edit
                     </button>
                     <AgentDeleteButton
                       agentId={agent.id}
                       onDelete={async () => {
-                        const updatedAgents = await getAllAgents();
+                        const updatedAgents = await fetchScopedAgents();
                         setAgentLists(updatedAgents);
                         setOpenMenuId(null);
                       }}
@@ -136,10 +152,10 @@ const AgentList = () => {
         <AgentEditDialog
           agent={mapAgentToUpdateForm(editingAgent)}
           onClose={() => setEditingAgent(null)}
-          onUpdate={async() => {
-          const updatedAgents = await getAllAgents();
-          setAgentLists(updatedAgents);
-          setEditingAgent(null);
+          onUpdate={async () => {
+            const updatedAgents = await fetchScopedAgents();
+            setAgentLists(updatedAgents);
+            setEditingAgent(null);
           }}
         />
       )}
@@ -148,14 +164,14 @@ const AgentList = () => {
           isVisible={showCreateModal}
           onClose={() => setShowCreateModal(false)}
           onCreateSuccess={async () => {
-            const updated = await getAllAgents();
+            const updated = await fetchScopedAgents();
             setAgentLists(updated);
             setShowCreateModal(false);
           }}
         />
       )}
     </div>
-    
+
   );
 };
 

@@ -1,20 +1,25 @@
-import { useState, useEffect} from 'react';
-import DashboardNavbar from './DashboardNavbar';
-import { useAuth } from '../contexts/AuthContext';
+import { useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+import DashboardNavbar from './DashboardNavbar';
 import PhotographyCompanyDashboard from './PhotographyCompanyDashboard';
 import AgentList from './AgentList/AgentList';
-import ListingDashboard from './ListingDashBoard/ListingDashboard';
-
-
+import ListingDashboard from './ListingDashboard/ListingDashboard';
 
 const allNavItems = ['Listing', 'Agents', 'Photography companies'] as const;
 type ButtonType = typeof allNavItems[number];
 
-const DashboardLayout = () => {
+interface DashboardLayoutProps {
+  children?: ReactNode;
+  scope?: 'company' | 'admin';
+}
+
+const DashboardLayout = ({ children, scope }: DashboardLayoutProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
+
+  // Redirect unauthenticated or agent users
   useEffect(() => {
     if (!user) {
       navigate('/login');
@@ -22,11 +27,13 @@ const DashboardLayout = () => {
       navigate('/AgentPropertyPage');
     }
   }, [user, navigate]);
-  
+
+  // Block rendering during redirect
   if (!user || user.role === 'Agent') {
-    return null; // don't render anything during redirection
+    return null;
   }
 
+  // Dynamically build nav items based on role
   let navItems: readonly ButtonType[] = [];
   if (user.role === 'Admin') {
     navItems = ['Listing', 'Agents', 'Photography companies'];
@@ -34,13 +41,24 @@ const DashboardLayout = () => {
     navItems = ['Listing', 'Agents'];
   }
 
+  // Active tab state (for Admin/Company dashboards)
   const [activeTab, setActiveTab] = useState<ButtonType>(navItems[0]);
+
+  // Resolve scope dynamically if not passed
+  const resolvedScope: 'company' | 'admin' =
+    scope ?? (user.role === 'PhotographyCompany' ? 'company' : 'admin');
+
+  // Render main content area
   const renderContent = () => {
+    // Use passed children directly if defined
+    if (children) return children;
+
+    // Else render by active tab
     switch (activeTab) {
       case 'Listing':
-        return <ListingDashboard />;
+        return <ListingDashboard scope={resolvedScope} />;
       case 'Agents':
-        return <AgentList />;
+        return <AgentList scope={resolvedScope} />;
       case 'Photography companies':
         return <PhotographyCompanyDashboard />;
       default:
@@ -55,7 +73,9 @@ const DashboardLayout = () => {
         activeTab={activeTab}
         onTabChange={setActiveTab}
       />
-      <div className="pt-16 px-6">{renderContent()}</div>
+      <div className="pt-16 px-6">
+        {renderContent()}
+      </div>
     </div>
   );
 };
