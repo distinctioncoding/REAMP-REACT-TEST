@@ -7,9 +7,9 @@ import HeroImageSelect from './components/HeroImageSelect';
 import AgentsPage from './components/PhotoGraphyCompany/AgentsPage';
 import DashboardLayout from './components/DashboardLayout';
 import AddAgentByEmail from './components/PhotoGraphyCompany/AddAgentByEmail';
-import ListingDashboard from './components/ListingDashBoard/ListingDashboard';
+import ListingDashboard from './components/ListingDashboard/ListingDashboard';
 import ConpanySignUpPage from './components/PhotoGraphyCompany/ConpanySignUp';
-import PhotographyCompanyDashboard from './components/PhotographyCompanyDashboard';
+import PhotographyCompanyPortal from './components/PhotoGraphyCompany/PhotographyCompanyPortal';
 import PreviewPage from './components/PropertyPreviewPage/PreviewPage';
 
 const mockImages = Array.from({ length: 25 }, (_, i) => ({
@@ -31,6 +31,7 @@ function App() {
         <Route path="/ConpanySignUpPage" element={<ConpanySignUpPage/>} />
         <Route path="/agentspage" element={<AgentsPage/>} />
         <Route path="/AddAgentByEmail" element={<AddAgentByEmail/>} />
+        <Route path="/portal" element={<PhotographyCompanyPortal />} />
         <Route path="/PreviewPage" element={<PreviewPage/>} />
 
         <Route
