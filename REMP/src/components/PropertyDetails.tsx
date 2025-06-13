@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ListingAssetStatus } from '../interfaces/litsting-assets';
@@ -9,12 +8,17 @@ import { HiOutlineDocumentSearch } from 'react-icons/hi';
 import { MediaAssetResponseDto } from '../interfaces/MediaAssetResponseDto';
 import { getListingCaseDetail } from '../api/listingcase/listing-api';
 
+import CommonModal from '../components/CommonModal';
+import PhotographyUploadForm from '../components/PhotographyUploadForm';
+
 const PropertyDetail = () => {
   const { listingId } = useParams();
   const [assets, setAssets] = useState<ListingAssetStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [pictureCount, setPictureCount] = useState(0);
 
+  const [isPhotographyModalOpen, setPhotographyModalOpen] = useState(false);
+  const [uploadPhotographyType, setUploadPhotographyType] = useState<'W' | 'P'>('W');
 
   useEffect(() => {
     if (!listingId) return;
@@ -80,8 +84,6 @@ const PropertyDetail = () => {
     return { status, pictureCount };
   };
 
-
-
   const assetBlocks = [
     { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, showCount: true },
     { label: 'Photography-P', key: 'photographyP', icon: <BsCamera className="text-orange-500 text-2xl" /> },
@@ -105,7 +107,16 @@ const PropertyDetail = () => {
               key={asset.key}
               className={`relative w-40 h-40 flex flex-col items-center justify-center rounded-2xl transition-all
     ${isAvailable ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400'}
-    hover:shadow-md`}
+    hover:shadow-md cursor-pointer`}
+              onClick={() => {
+                if (asset.key === 'photographyW') {
+                  setUploadPhotographyType('W');
+                  setPhotographyModalOpen(true);
+                } else if (asset.key === 'photographyP') {
+                  setUploadPhotographyType('P');
+                  setPhotographyModalOpen(true);
+                }
+              }}
             >
               {asset.showCount && pictureCount > 0 && (
                 <span className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
@@ -116,13 +127,27 @@ const PropertyDetail = () => {
               <div className="text-3xl mb-2">{asset.icon}</div>
               <span className="text-lg font-semibold text-center">{asset.label}</span>
             </div>
-
           );
         })}
       </div>
+
+      {/* Photography Upload Modal */}
+      <CommonModal
+        isOpen={isPhotographyModalOpen}
+        onClose={() => setPhotographyModalOpen(false)}
+        title={`Upload photography - ${uploadPhotographyType}`}
+        size="lg"
+      >
+        <PhotographyUploadForm
+          listingId={Number(listingId)}
+          onUploadSuccess={() => {
+            setPhotographyModalOpen(false);
+            fetchAssets(Number(listingId));
+          }}
+        />
+      </CommonModal>
     </div>
   );
 };
 
 export default PropertyDetail;
-
