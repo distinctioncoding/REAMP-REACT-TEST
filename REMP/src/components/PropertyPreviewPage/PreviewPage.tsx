@@ -13,6 +13,12 @@ import PreviewSingleMedia from './PreviewSinglePhoto'
 const PreviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const [listing, setListing] = useState<ListingCaseDetail | null>(null);
+  const cleanIdStr = id?.startsWith(':') ? id.slice(1) : id;
+
+  const listingId = cleanIdStr && !isNaN(Number(cleanIdStr))
+    ? Number(cleanIdStr)
+    : undefined;
+
 
   useEffect(() => {
     if (id && !isNaN(Number(id))) {
