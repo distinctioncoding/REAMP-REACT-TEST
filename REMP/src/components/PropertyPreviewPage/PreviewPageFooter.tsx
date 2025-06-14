@@ -80,7 +80,7 @@ return (
           disabled={!listingId || listingId <= 0}
           className={`
             underline text-sm font-semibold
-            ${!listingId ? 'text-gray-400 cursor-not-allowed' : 'text-blue-600 hover:text-blue-800'}
+            ${!listingId ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:text-blue-800'}
           `}
         >
           Click to add
