@@ -44,7 +44,7 @@ const PreviewPage = () => {
         mediaType="video"
       />}
       <PreviewMap title="Location" lat={-33.8568} lon={151.2153} />
-      <PreviewPageFooter />
+      <PreviewPageFooter listingId={Number(listingId)}/>
     </div>
   );
 };

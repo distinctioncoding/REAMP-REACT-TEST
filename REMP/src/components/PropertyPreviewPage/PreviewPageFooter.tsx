@@ -13,8 +13,8 @@ const default_avatar =
 
 const PreviewPageFooter: React.FC<PreviewPageFooterProps> = ({ listingId }) => {
   const navigate = useNavigate();
-    const [contacts, setContacts] = useState<CaseContactResponseDto[]>([]);
-   useEffect(() => {
+  const [contacts, setContacts] = useState<CaseContactResponseDto[]>([]);
+  useEffect(() => {
     if (listingId && listingId > 0) {
       getCaseContactsByListing(listingId)
         .then(list => setContacts(list))
@@ -27,11 +27,11 @@ const PreviewPageFooter: React.FC<PreviewPageFooterProps> = ({ listingId }) => {
 
   const handleAdd = () => {
     if (listingId && listingId > 0) {
-      navigate(`/AgentContact/${listingId}`);
+      navigate(`/AgentContact`,{ state: { listingId } });
     }
   };
 
-return (
+  return (
     <div className="bg-white rounded-lg shadow p-6 mt-8 ">
       <h2 className="text-2xl font-bold mb-2 text-center">Contact</h2>
 
