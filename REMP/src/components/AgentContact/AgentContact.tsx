@@ -1,69 +1,48 @@
 // src/pages/AgentContact.tsx
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { CaseContactResponseDto } from '../../interfaces/CaseContact';
 import { getCaseContactsByListing } from '../../api/caseContactApi';
-import CreateAgentContactForm from './CreateAgentContactForm';
 import SavedAgentsContactForm from './SavedAgentsContactForm';
+import CreateAgentContactForm from './CreateAgentContactForm';
 
-interface LocationState {
+
+interface AgentContactProps {
   listingId: number;
+  defaultAvatar: string;
+  onCancel: () => void;
+  onSuccess: () => void;
 }
 
-const defaultAvatar =
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalljTSZqVNiMcODXhfKpF25M-mn_-6fVx8g&s';
-
-const AgentContact: React.FC = () => {
-  const { state } = useLocation();
-  const { listingId } = state as LocationState;
-  const navigate = useNavigate();
-
+const AgentContact: React.FC<AgentContactProps> = ({
+  listingId,
+  defaultAvatar,
+  onCancel,
+  onSuccess,
+}) => {
   const [isCreating, setIsCreating] = useState(false);
   const [contacts, setContacts] = useState<CaseContactResponseDto[]>([]);
 
-
   useEffect(() => {
     const fetchSavedAgents = async (id: number) => {
-    try {
-      const list = await getCaseContactsByListing(id);
-      setContacts(list);
-    } catch (err: any) {
-      if (err.response?.status === 400) {
-        setContacts([]);
-        console.error('获取已保存联系人失败，接口返回 BadRequest', err);
-      } else {
-        setContacts([]);
+      try {
+        const list = await getCaseContactsByListing(id);
+        setContacts(list);
+      } catch (err: any) {
         console.error('获取已保存联系人失败', err);
+        setContacts([]);
       }
-    }
-  };
-
-    if (listingId > 0) {
-      fetchSavedAgents(listingId);
-    }
+    };
+    fetchSavedAgents(listingId);
   }, [listingId]);
 
-  const handleSuccess = () => {
-    getCaseContactsByListing(listingId).then(setContacts);
-    setIsCreating(false);
-  };
-
-  const handleCancel = () => setIsCreating(false);
-
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white p-4">
-      <div className="relative w-full max-w-lg max-h-[90vh] overflow-auto bg-white rounded-xl shadow-lg p-6">
+
+    <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+      <div
+        className="relative w-full max-w-lg max-h-[90vh] overflow-auto bg-white rounded-xl shadow-lg p-6 pointer-events-auto"
+      >
         <button
-          onClick={() => {
-            if (isCreating) {
-              //右上角 X
-              //创建时关闭表单
-              handleCancel();
-            } else {
-              //查看saved agents的时候退一步
-              navigate(-1);
-            }
-          }}
+          onClick={onCancel}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
         >
           ✕
@@ -102,14 +81,16 @@ const AgentContact: React.FC = () => {
             </div>
           </>
         ) : (
-          <>
-            <CreateAgentContactForm
-              listingId={listingId}
-              defaultAvatar={defaultAvatar}
-              onCancel={handleCancel}
-              onSuccess={handleSuccess}
-            />
-          </>
+          <CreateAgentContactForm
+            listingId={listingId}
+            defaultAvatar={defaultAvatar}
+            onCancel={() => setIsCreating(false)}
+            onSuccess={() => {
+              getCaseContactsByListing(listingId).then(setContacts);
+              setIsCreating(false);
+              onSuccess();
+            }}
+          />
         )}
       </div>
     </div>

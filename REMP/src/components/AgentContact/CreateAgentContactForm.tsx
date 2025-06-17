@@ -13,7 +13,6 @@ interface CreateAgentContactFormProps {
 const CreateAgentContactForm: React.FC<CreateAgentContactFormProps> = ({
   listingId,
   defaultAvatar,
-  onCancel,
   onSuccess,
 }) => {
   // 表单状态

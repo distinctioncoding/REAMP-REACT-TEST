@@ -36,7 +36,6 @@ function App() {
         <Route path="/portal" element={<PhotographyCompanyPortal />} />
         <Route path="/preview/:id" element={<PreviewPage />} />
         <Route path="/ChangePasswordPage" element={<ChangePasswordPage/>} />
-        <Route path="/AgentContact" element={<AgentContact/>} />
 
         <Route
           path="/hero-select"
