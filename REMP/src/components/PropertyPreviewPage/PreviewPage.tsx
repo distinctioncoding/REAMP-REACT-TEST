@@ -13,6 +13,12 @@ import PreviewSingleMedia from './PreviewSinglePhoto'
 const PreviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const [listing, setListing] = useState<ListingCaseDetail | null>(null);
+  const cleanIdStr = id?.startsWith(':') ? id.slice(1) : id;
+
+  const listingId = cleanIdStr && !isNaN(Number(cleanIdStr))
+    ? Number(cleanIdStr)
+    : undefined;
+
 
   useEffect(() => {
     if (id && !isNaN(Number(id))) {
@@ -38,7 +44,7 @@ const PreviewPage = () => {
         mediaType="video"
       />}
       <PreviewMap title="Location" lat={-33.8568} lon={151.2153} />
-      <PreviewPageFooter />
+      <PreviewPageFooter listingId={Number(listingId)}/>
     </div>
   );
 };
