@@ -46,7 +46,7 @@ const ListingUpdateDialog = ({ listing, onClose, onUpdated }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-opacity-40 bg-white/50  backdrop-blur flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-3xl">
         <h2 className="text-xl font-semibold mb-4">Edit Listing</h2>
         <div className="grid grid-cols-2 gap-4">
