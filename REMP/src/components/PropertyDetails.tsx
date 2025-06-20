@@ -10,15 +10,26 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 
 import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
+import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
+import { ListingCase } from '../interfaces/listing-case';
 
-const PropertyDetail = () => {
-  const { listingId } = useParams();
+interface PropertyDetailProps {
+  id?: number;
+}
+
+const PropertyDetail = ({ id }: PropertyDetailProps) => {
+  const { listingId: paramId } = useParams();
+  const listingId = id ?? (paramId ? Number(paramId) : undefined);
+
   const [assets, setAssets] = useState<ListingAssetStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [pictureCount, setPictureCount] = useState(0);
 
   const [isPhotographyModalOpen, setPhotographyModalOpen] = useState(false);
   const [uploadPhotographyType, setUploadPhotographyType] = useState<'W' | 'P'>('W');
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentListing, setCurrentListing] = useState<ListingCase | null>(null);
 
   useEffect(() => {
     if (!listingId) return;
@@ -31,6 +42,7 @@ const PropertyDetail = () => {
       const data = flattenMediaAssets(listing.mediaAssets);
       const { status, pictureCount } = calculateMediaStatus(data);
 
+      setCurrentListing(listing);
       setAssets(status);
       setPictureCount(pictureCount);
     } catch (err) {
@@ -99,15 +111,15 @@ const PropertyDetail = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Property Assets</h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-6">
         {assetBlocks.map((asset) => {
           const isAvailable = asset.alwaysOn || assets[asset.key as keyof ListingAssetStatus];
           return (
             <div
               key={asset.key}
               className={`relative w-40 h-40 flex flex-col items-center justify-center rounded-2xl transition-all
-    ${isAvailable ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400'}
-    hover:shadow-md cursor-pointer`}
+              ${isAvailable ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-400'}
+              hover:shadow-md cursor-pointer`}
               onClick={() => {
                 if (asset.key === 'photographyW') {
                   setUploadPhotographyType('W');
@@ -115,6 +127,9 @@ const PropertyDetail = () => {
                 } else if (asset.key === 'photographyP') {
                   setUploadPhotographyType('P');
                   setPhotographyModalOpen(true);
+                } else if (asset.key === 'propertyDetails') {
+                  setIsEditing(true);
+                  return;
                 }
               }}
             >
@@ -146,6 +161,17 @@ const PropertyDetail = () => {
           }}
         />
       </CommonModal>
+
+      {isEditing && currentListing && (
+        <ListingUpdateDialog
+          listing={currentListing}
+          onClose={() => setIsEditing(false)}
+          onUpdated={() => {
+            setIsEditing(false);
+            fetchAssets(currentListing?.id); // 重新加载数据
+          }}
+        />
+      )}
     </div>
   );
 };

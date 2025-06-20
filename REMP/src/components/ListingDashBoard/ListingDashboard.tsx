@@ -6,10 +6,11 @@ import PropertyModalContainer from "../PropertyModalContainer"
 
 import ListingUpdateDialog from "./ListingUpdate";
 import DeleteListingButton from "./DeleteListing";
+import PropertyDetail from "../PropertyDetails";
 
 
 interface ListingDashboardProps {
-  scope?: 'company' | 'admin';
+    scope?: 'company' | 'admin';
 }
 
 // Map backend enum values to readable labels
@@ -33,15 +34,16 @@ const getStatusLabel = (status: number): string => {
 };
 
 
-const ListingDashboard = ({scope}: ListingDashboardProps) => {
+const ListingDashboard = ({ scope }: ListingDashboardProps) => {
     const [listings, setListings] = useState<ListingCase[]>([]);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [openMenuId, setOpenMenuId] = useState<number | null>(null);
     const [editingListing, setEditingListing] = useState<ListingCase | null>(null);
     const navigate = useNavigate();
-    const handleViewDetails = (id: number) => {
-        navigate(`/property/${id}`);
-    };
+    const [viewDetailListingId, setViewDetailListingId] = useState<number | null>(null);
+
+
+
 
     const fetchListings = () => {
         getListingCases()
@@ -55,7 +57,17 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
         fetchListings();
     }, []);
 
-    return (
+    return viewDetailListingId ? (
+        <div className="w-full min-h-screen bg-white overflow-auto p-6">
+            <button
+                className="mb-4 text-gray-500 hover:text-gray-800 text-lg"
+                onClick={() => setViewDetailListingId(null)}
+            >
+                ← Back to Dashboard
+            </button>
+            <PropertyDetail id={viewDetailListingId} />
+        </div>
+    ) : (
         <div className="p-6">
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Display all ListingCases in dashboard</h1>
@@ -95,7 +107,11 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
                             </td>
                             <td className="px-4 py-2">
                                 <button
-                                    onClick={() => handleViewDetails(item.id)}
+
+                                    onClick={() => {
+                                        setEditingListing(item);
+                                        setOpenMenuId(null);
+                                    }}
                                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition"
                                 >
                                     View Details
@@ -110,19 +126,19 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
                                         <button
                                             className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
                                             onClick={() => {
-                                                setEditingListing(item);
+                                                setViewDetailListingId(item.id);
                                                 setOpenMenuId(null);
                                             }}
                                         >
                                             Edit
                                         </button>
                                         <DeleteListingButton
-                                          listingId={item.id}
-                                          onDelete={async () => {
-                                            const allListings = await getListingCases();
-                                            setListings(allListings);
-                                            setOpenMenuId(null)
-                                          }}
+                                            listingId={item.id}
+                                            onDelete={async () => {
+                                                const allListings = await getListingCases();
+                                                setListings(allListings);
+                                                setOpenMenuId(null)
+                                            }}
                                         />
                                     </div>
                                 )}
@@ -149,6 +165,7 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
                     onUpdated={fetchListings}
                 />
             )}
+
         </div>
     );
 };
