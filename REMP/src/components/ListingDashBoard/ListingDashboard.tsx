@@ -66,7 +66,7 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
                     + Create New Property
                 </button>
             </div>
-            <table className="w-full text-left border-collapse shadow-sm rounded-lg overflow-hidden text-gray-700 font-medium">
+            <table className="w-full text-left border-collapse shadow-sm rounded-lg text-gray-700 font-medium">
                 <thead className="bg-gray-100 border-b-2 border-gray-300">
                     <tr>
                         <th className="px-4 py-2">PROPERTY#</th>
@@ -106,7 +106,7 @@ const ListingDashboard = ({scope}: ListingDashboardProps) => {
                                     ⋯
                                 </button>
                                 {openMenuId === item.id && (
-                                    <div className="absolute right-0 top-8 z-10 bg-white border rounded shadow-md text-left">
+                                    <div className="absolute right-0 top-full z-10 bg-white border rounded shadow-md text-left">
                                         <button
                                             className="block px-4 py-2 hover:bg-gray-100 text-sm text-gray-700"
                                             onClick={() => {
