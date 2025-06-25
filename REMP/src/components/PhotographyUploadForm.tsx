@@ -16,6 +16,7 @@ export default function PhotographyUploadForm({
 }: PhotographyUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [existingMediaAssets, setExistingMediaAssets] = useState<MediaAssetResponseDto[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, acceptedFiles, fileRejections } = useDropzone({
     accept: { 'image/*': [] },
@@ -29,6 +30,12 @@ export default function PhotographyUploadForm({
     fetchMediaAssets();
   }, []);
 
+  useEffect(() => {
+    if (acceptedFiles.length > 0) {
+      setSelectedFiles((prev) => [...prev, ...acceptedFiles]);
+    }
+  }, [acceptedFiles]);
+
   const fetchMediaAssets = async () => {
     try {
       const result = await getMediaAssetsByListingId(listingId);
@@ -39,7 +46,7 @@ export default function PhotographyUploadForm({
   };
 
   const handleUpload = async () => {
-    if (acceptedFiles.length === 0) {
+    if (selectedFiles.length === 0) {
       alert('Please select images to upload.');
       return;
     }
@@ -47,11 +54,12 @@ export default function PhotographyUploadForm({
     setIsUploading(true);
     try {
       await uploadMediaToListingCase({
-        files: Array.from(acceptedFiles), // Fix readonly issue
+        files: selectedFiles, // Fix readonly issue
         listingCaseId: listingId,
         type: MediaType.Picture,
       });
       alert('Upload successful!');
+      setSelectedFiles([]);
       await fetchMediaAssets(); // Refresh existing media after upload
       onUploadSuccess();
     } catch (err) {
@@ -67,7 +75,7 @@ export default function PhotographyUploadForm({
       {/* Existing media preview */}
       {existingMediaAssets.length > 0 && (
         <div className="space-y-2">
-          <p className="text-gray-800 font-semibold">Previously uploaded images:</p>
+          <p className="text-white font-semibold">Previously uploaded images:</p>
           <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto">
             {existingMediaAssets.map((media) => (
               <div key={media.id} className="border p-1 rounded">
@@ -95,7 +103,7 @@ export default function PhotographyUploadForm({
         <input {...getInputProps()} />
 
         {/* Title */}
-        <p className="text-gray-800 font-semibold mb-4">Drop your images here to upload</p>
+        <p className="text-white font-semibold mb-4">Drop your images here to upload</p>
 
         {/* Choose files button */}
         <div className="inline-flex items-center gap-2 px-[36px] py-[14px] h-[44px] bg-blue-500 text-white rounded-full hover:bg-blue-600 transition text-sm font-medium justify-center mx-auto">
@@ -105,9 +113,9 @@ export default function PhotographyUploadForm({
       </div>
 
       {/* Preview area for current upload */}
-      {acceptedFiles.length > 0 && (
+      {selectedFiles.length > 0 && (
         <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto">
-          {acceptedFiles.map((file, index) => (
+          {selectedFiles.map((file, index) => (
             <div key={index} className="border p-1 rounded">
               <img
                 src={URL.createObjectURL(file)}
@@ -130,15 +138,23 @@ export default function PhotographyUploadForm({
       {/* Image count + Upload button in one line */}
       <div className="flex justify-between items-center p-5 border-t border-gray-200 dark:border-gray-700">
         {/* Image count */}
-        {acceptedFiles.length > 0 ? (
+        {selectedFiles.length > 0 ? (
           <div className="inline-flex items-center gap-1 bg-gray-100 text-gray-700 px-3 py-1 rounded-md text-sm font-semibold">
-            {acceptedFiles.length} images
+            {selectedFiles.length} images
           </div>
         ) : (
           <div></div> // Placeholder to keep alignment
         )}
 
-        {/* Upload button */}
+        {/* Upload and Clear button */}
+        <button
+          type="button"
+          onClick={() => setSelectedFiles([])}
+          className="flex items-center justify-center h-[44px] px-[36px] rounded-full bg-blue-500 text-white hover:bg-blue-600 gap-[10px] disabled:opacity-50"
+        >
+          Clear preview area
+        </button>
+
         <button
           type="button"
           onClick={handleUpload}
