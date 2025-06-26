@@ -69,7 +69,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
     handleChange('postcode', Number(address.postcode));
     handleChange('latitude', address.latitude);
     handleChange('longitude', address.longitude);
-    
+
     if (errors.address) {
       setErrors((prev) => ({ ...prev, address: undefined }));
     }
@@ -146,9 +146,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
           value={formData.title}
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Enter property title"
-          className={`w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition ${
-            errors.title ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition ${errors.title ? 'border-red-500' : 'border-gray-300'
+            }`}
         />
         {errors.title && (
           <p className="mt-1 text-sm text-red-500">{errors.title}</p>
@@ -168,17 +167,19 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
                 value={option.value}
                 checked={formData.saleCategory === option.value}
                 onChange={(e) => handleChange('saleCategory', Number(e.target.value))}
-                className="peer hidden"
+                className={`
+                appearance-none w-6 h-6 bg-white rounded-[2px]
+                border border-gray-300 bg-white
+                shadow-[0_2px_4px_rgba(0,0,0,0.2)] relative transition
+                checked:bg-green-500 checked:border-green-500
+                checked:before:content-['✔']
+                checked:before:absolute
+                checked:before:inset-0
+                checked:before:flex
+                checked:before:justify-center
+                checked:before:text-white
+              `}
               />
-              <div
-                className={`w-6 h-6 rounded-lg flex items-center justify-center transition ${
-                  formData.saleCategory === option.value
-                    ? 'bg-gray-900 text-white border border-gray-900'
-                    : 'bg-white border border-gray-400'
-                }`}
-              >
-                {formData.saleCategory === option.value && '✔'}
-              </div>
               <span>{option.label}</span>
             </label>
           ))}
@@ -198,20 +199,23 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
                 value={option.value}
                 checked={formData.propertyType === option.value}
                 onChange={(e) => handleChange('propertyType', Number(e.target.value))}
-                className="peer hidden"
+                className={`
+                appearance-none w-6 h-6 bg-white rounded-[2px]
+                border border-gray-300 bg-white
+                shadow-[0_2px_4px_rgba(0,0,0,0.2)] relative transition
+                checked:bg-green-500 checked:border-green-500
+                checked:before:content-['✔']
+                checked:before:absolute
+                checked:before:inset-0
+                checked:before:flex
+                checked:before:justify-center
+                checked:before:text-white
+              `}
               />
-              <div
-                className={`w-6 h-6 rounded-lg flex items-center justify-center transition ${
-                  formData.propertyType === option.value
-                    ? 'bg-gray-900 text-white border border-gray-900'
-                    : 'bg-white border border-gray-400'
-                }`}
-              >
-                {formData.propertyType === option.value && '✔'}
-              </div>
               <span>{option.label}</span>
             </label>
           ))}
+
         </div>
       </div>
 
@@ -284,9 +288,8 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
             value={formData.price === 0 ? '' : formData.price}
             onChange={(e) => handleChange('price', Number(e.target.value))}
             placeholder="Enter price"
-            className={`w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition ${
-              errors.price ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition ${errors.price ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.price && (
             <p className="mt-1 text-sm text-red-500">{errors.price}</p>
