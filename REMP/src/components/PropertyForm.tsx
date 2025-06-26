@@ -138,7 +138,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
   };
 
   return (
-    <form className="space-y-6 text-gray-800 dark:text-white" onSubmit={(e) => e.preventDefault()}>
+    <form className="space-y-6 text-gray-800" onSubmit={(e) => e.preventDefault()}>
       <div>
         <label className="block font-semibold mb-4">Property Title</label>
         <input
@@ -146,7 +146,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
           value={formData.title}
           onChange={(e) => handleChange('title', e.target.value)}
           placeholder="Enter property title"
-          className={`w-full border px-3 h-14 rounded-lg ${
+          className={`w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition ${
             errors.title ? 'border-red-500' : 'border-gray-300'
           }`}
         />
@@ -237,7 +237,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
           value={formData.street}
           readOnly
           placeholder="Street will be automatically filled"
-          className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
+          className="w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition"
         />
       </div>
 
@@ -249,7 +249,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
             value={formData.city}
             readOnly
             placeholder="City will be automatically filled"
-            className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
+            className="w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition"
           />
         </div>
 
@@ -260,7 +260,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
             value={formData.state}
             readOnly
             placeholder="State will be automatically filled"
-            className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
+            className="w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition"
           />
         </div>
       </div>
@@ -273,7 +273,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
             value={formData.postcode === 0 ? '' : formData.postcode}
             readOnly
             placeholder="Postcode will be automatically filled"
-            className="w-full border border-gray-300 px-3 h-14 rounded-lg bg-gray-50"
+            className="w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition"
           />
         </div>
 
@@ -284,7 +284,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
             value={formData.price === 0 ? '' : formData.price}
             onChange={(e) => handleChange('price', Number(e.target.value))}
             placeholder="Enter price"
-            className={`w-full border px-3 h-14 rounded-lg ${
+            className={`w-full h-12 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition ${
               errors.price ? 'border-red-500' : 'border-gray-300'
             }`}
           />
@@ -321,7 +321,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ onClose }) => {
                     onChange={(e) =>
                       handleChange(item.key, Number(e.target.value))
                     }
-                    className="w-16 border rounded text-center"
+                    className="w-20 h-8 rounded-lg border border-gray-300 px-4 focus:outline-none focus:ring focus:ring-blue-300 transition"
                   />
                   <span>m²</span>
                 </div>
