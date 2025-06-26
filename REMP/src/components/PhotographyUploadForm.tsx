@@ -116,7 +116,15 @@ export default function PhotographyUploadForm({
       {selectedFiles.length > 0 && (
         <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto">
           {selectedFiles.map((file, index) => (
-            <div key={index} className="border p-1 rounded">
+            <div key={index} className="relative border p-1 rounded">
+              <button
+                onClick={() =>
+                  setSelectedFiles((prev) => prev.filter((_, i) => i !== index))
+                }
+                className="absolute top-0 right-0 bg-gray-500 text-white rounded-full w-4 h-4 text-s flex items-center justify-center hover:bg-red-600"
+              >
+                ×
+              </button>
               <img
                 src={URL.createObjectURL(file)}
                 alt={file.name}
