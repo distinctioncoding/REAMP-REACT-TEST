@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ListingAssetStatus } from '../interfaces/litsting-assets';
-import { BsCamera, BsCameraVideo, BsHouse } from 'react-icons/bs';
+import { BsCamera, BsCameraVideo, BsHouse,BsPersonAdd  } from 'react-icons/bs';
 import { FaVrCardboard } from 'react-icons/fa';
 import { HiOutlineDocumentSearch } from 'react-icons/hi';
 
@@ -12,6 +12,9 @@ import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
 import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
 import { ListingCase } from '../interfaces/listing-case';
+import { CaseContactResponseDto } from '../interfaces/CaseContact';
+import { getCaseContactsByListing } from '../api/caseContactApi';
+import AgentContact from './AgentContact/AgentContact';
 
 interface PropertyDetailProps {
   id?: number;
@@ -31,9 +34,27 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentListing, setCurrentListing] = useState<ListingCase | null>(null);
 
+  const [contacts, setContacts] = useState<CaseContactResponseDto[]>([]);
+  const [showModal, setShowModal] = useState(false);
+ 
+  const handleCancel = () => setShowModal(false);
+  const handleSuccess = () => {
+    if (listingId) {
+      getCaseContactsByListing(listingId).then(setContacts);
+    }
+    setShowModal(false);
+  };
+
   useEffect(() => {
     if (!listingId) return;
     fetchAssets(Number(listingId));
+
+    getCaseContactsByListing(listingId)
+        .then(setContacts)
+        .catch(err => {
+          console.error('拉联系人失败', err);
+          setContacts([]);
+        });
   }, [listingId]);
 
   const fetchAssets = async (id: number) => {
@@ -98,7 +119,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
 
   const assetBlocks = [
     { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, showCount: true },
-    { label: 'Photography-P', key: 'photographyP', icon: <BsCamera className="text-orange-500 text-2xl" /> },
+    { label: 'Add Agent Contact', key: 'addAgentContact', icon: <BsPersonAdd  className="text-red-500 text-2xl" /> },
     { label: 'Floor Plan', key: 'floorPlan', icon: <HiOutlineDocumentSearch className="text-green-600 text-2xl" /> },
     { label: 'Videography', key: 'videography', icon: <BsCameraVideo className="text-gray-400 text-2xl" /> },
     { label: 'VR Tour', key: 'vrTour', icon: <FaVrCardboard className="text-gray-400 text-2xl" /> },
@@ -124,9 +145,8 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
                 if (asset.key === 'photographyW') {
                   setUploadPhotographyType('W');
                   setPhotographyModalOpen(true);
-                } else if (asset.key === 'photographyP') {
-                  setUploadPhotographyType('P');
-                  setPhotographyModalOpen(true);
+                } else if (asset.key === 'addAgentContact') {
+                  setShowModal(true);
                 } else if (asset.key === 'propertyDetails') {
                   setIsEditing(true);
                   return;
@@ -170,6 +190,14 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
             setIsEditing(false);
             fetchAssets(currentListing?.id); // 重新加载数据
           }}
+        />
+      )}
+
+      {showModal && listingId && (
+        <AgentContact
+          listingId={listingId}
+          onCancel={handleCancel}
+          onSuccess={handleSuccess}
         />
       )}
     </div>

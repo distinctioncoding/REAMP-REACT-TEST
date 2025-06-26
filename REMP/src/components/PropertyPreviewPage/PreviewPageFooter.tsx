@@ -101,7 +101,6 @@ const PreviewPageFooter: React.FC<PreviewPageFooterProps> = ({ listingId }) => {
       {showModal && listingId && (
         <AgentContact
           listingId={listingId}
-          defaultAvatar={default_avatar}
           onCancel={handleCancel}
           onSuccess={handleSuccess}
         />

@@ -8,19 +8,20 @@ import CreateAgentContactForm from './CreateAgentContactForm';
 
 interface AgentContactProps {
   listingId: number;
-  defaultAvatar: string;
   onCancel: () => void;
   onSuccess: () => void;
 }
 
 const AgentContact: React.FC<AgentContactProps> = ({
   listingId,
-  defaultAvatar,
   onCancel,
   onSuccess,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [contacts, setContacts] = useState<CaseContactResponseDto[]>([]);
+
+    const defaultAvatar = 
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalljTSZqVNiMcODXhfKpF25M-mn_-6fVx8g&s'; 
 
   useEffect(() => {
     const fetchSavedAgents = async (id: number) => {
