@@ -3,7 +3,7 @@ import apiClient from "../apiClient";
 
 export const assignAgentToListing = async (listingCaseId: number, agentId: string): Promise<void> => {
   try {
-    const res = await apiClient.post('ListingCase/AddAgentToListingCase', {
+    const res = await apiClient.post('/ListingCase/AddAgentToListingCase', {
       listingCaseId,
       agentId,
     });
