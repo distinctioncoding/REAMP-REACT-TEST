@@ -12,6 +12,8 @@ import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
 import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
 import { ListingCase } from '../interfaces/listing-case';
+import { MediaType } from '../enums/mediaType';
+import MediaUploadForm from './MediaUploadForm';
 import { Agent } from '../interfaces/agent-response';
 import { getAllAgents } from '../api/agent/get-all-agents';
 import AssignAgentPopupContent from './AssignAgentPopupContent';
@@ -33,6 +35,9 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentListing, setCurrentListing] = useState<ListingCase | null>(null);
+
+  const [mediaUploadType, setMediaUploadType] = useState<MediaType | null>(null);
+  const [isMediaModalOpen, setMediaModalOpen] = useState(false);
 
   const [isAssignAgentOpen, setAssignAgentOpen] = useState(false);
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -135,13 +140,25 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
                 if (asset.key === 'photographyW') {
                   setUploadPhotographyType('W');
                   setPhotographyModalOpen(true);
+                } else if (asset.key === 'photographyP') {
+                  setUploadPhotographyType('P');
+                  setPhotographyModalOpen(true);
+                } else if (asset.key === 'floorPlan') {
+                  setMediaUploadType(MediaType.FloorPlan);
+                  setMediaModalOpen(true);
+                } else if (asset.key === 'videography') {
+                  setMediaUploadType(MediaType.Video);
+                  setMediaModalOpen(true);
+                } else if (asset.key === 'vrTour') {
+                  setMediaUploadType(MediaType.VRTour);
+                  setMediaModalOpen(true);
                 } else if (asset.key === 'assignAgent') {
                   setAssignAgentOpen(true);
                 } else if (asset.key === 'propertyDetails') {
                   setIsEditing(true);
-                  return;
                 }
               }}
+
             >
               {asset.showCount && pictureCount > 0 && (
                 <span className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
@@ -171,6 +188,25 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           }}
         />
       </CommonModal>
+
+      <CommonModal
+        isOpen={isMediaModalOpen}
+        onClose={() => setMediaModalOpen(false)}
+        title={`Upload ${MediaType[mediaUploadType!]}`}
+        size="lg"
+      >
+        {mediaUploadType && (
+          <MediaUploadForm
+            listingId={Number(listingId)}
+            mediaType={mediaUploadType}
+            onUploadSuccess={() => {
+              setMediaModalOpen(false);
+              fetchAssets(Number(listingId));
+            }}
+          />
+        )}
+      </CommonModal>
+
 
       <CommonModal
         isOpen={isAssignAgentOpen}
