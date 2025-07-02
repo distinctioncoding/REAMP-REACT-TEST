@@ -14,6 +14,9 @@ import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
 import { ListingCase } from '../interfaces/listing-case';
 import { MediaType } from '../enums/mediaType';
 import MediaUploadForm from './MediaUploadForm';
+import { Agent } from '../interfaces/agent-response';
+import { getAllAgents } from '../api/agent/get-all-agents';
+import AssignAgentPopupContent from './AssignAgentPopupContent';
 
 interface PropertyDetailProps {
   id?: number;
@@ -36,10 +39,20 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const [mediaUploadType, setMediaUploadType] = useState<MediaType | null>(null);
   const [isMediaModalOpen, setMediaModalOpen] = useState(false);
 
+  const [isAssignAgentOpen, setAssignAgentOpen] = useState(false);
+  const [agents, setAgents] = useState<Agent[]>([]);
   useEffect(() => {
     if (!listingId) return;
     fetchAssets(Number(listingId));
   }, [listingId]);
+
+  useEffect(() => {
+    if (isAssignAgentOpen) {
+      getAllAgents()
+        .then((res) => setAgents(res))
+        .catch((err) => console.error('Failed to load agents', err));
+    }
+  }, [isAssignAgentOpen]);
 
   const fetchAssets = async (id: number) => {
     try {
@@ -69,7 +82,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const calculateMediaStatus = (assets: MediaAssetResponseDto[]) => {
     const status: ListingAssetStatus = {
       photographyW: false,
-      photographyP: false,
+      assignAgent: false,
       floorPlan: false,
       videography: false,
       vrTour: false,
@@ -83,9 +96,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           pictureCount++;
           if (pictureCount === 1) {
             status.photographyW = true;
-          } else {
-            status.photographyP = true;
-          }
+          } 
           break;
         case 2: // Video
           status.videography = true;
@@ -103,7 +114,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
 
   const assetBlocks = [
     { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, showCount: true },
-    { label: 'Photography-P', key: 'photographyP', icon: <BsCamera className="text-orange-500 text-2xl" /> },
+    { label: 'Assign Agent', key: 'assignAgent', icon: <BsCamera className="text-orange-500 text-2xl" />, alwaysOn: true},
     { label: 'Floor Plan', key: 'floorPlan', icon: <HiOutlineDocumentSearch className="text-green-600 text-2xl" /> },
     { label: 'Videography', key: 'videography', icon: <BsCameraVideo className="text-gray-400 text-2xl" /> },
     { label: 'VR Tour', key: 'vrTour', icon: <FaVrCardboard className="text-gray-400 text-2xl" /> },
@@ -141,6 +152,8 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
                 } else if (asset.key === 'vrTour') {
                   setMediaUploadType(MediaType.VRTour);
                   setMediaModalOpen(true);
+                } else if (asset.key === 'assignAgent') {
+                  setAssignAgentOpen(true);
                 } else if (asset.key === 'propertyDetails') {
                   setIsEditing(true);
                 }
@@ -194,6 +207,21 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
         )}
       </CommonModal>
 
+
+      <CommonModal
+        isOpen={isAssignAgentOpen}
+        onClose={() => setAssignAgentOpen(false)}
+        title="Assign Agent"
+        size="lg"
+      >
+        <AssignAgentPopupContent
+          listingCaseId={Number(listingId)}
+          onAssigned={() => {
+            setAssignAgentOpen(false);
+            fetchAssets(Number(listingId));
+          }}
+        />
+      </CommonModal>
 
       {isEditing && currentListing && (
         <ListingUpdateDialog
