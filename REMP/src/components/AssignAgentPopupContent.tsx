@@ -30,9 +30,9 @@ const AssignAgentPopupContent: React.FC<AssignAgentPopupContentProps> = ({
     try {
       await assignAgentToListing(listingCaseId, agentId);
       if (onAssigned) onAssigned();
-    } catch (err) {
-      console.error('Failed to assign agent:', err);
-      setErrorMap((prev) => ({ ...prev, [agentId]: 'Add agent faild' }));
+    } catch (err:any) {
+      const errorMessage = err?.message || 'Add agent faild';
+      setErrorMap((prev) => ({ ...prev, [agentId]: errorMessage }));
     } finally {
       setAssigningId(null);
     }
