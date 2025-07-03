@@ -11,7 +11,7 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
 import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
-import { ListingCase } from '../interfaces/listing-case';
+import { ListingCaseDetail  } from '../interfaces/listing-case';
 import { MediaType } from '../enums/mediaType';
 import MediaUploadForm from './MediaUploadForm';
 import { Agent } from '../interfaces/agent-response';
@@ -34,7 +34,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const [uploadPhotographyType, setUploadPhotographyType] = useState<'W' | 'P'>('W');
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentListing, setCurrentListing] = useState<ListingCase | null>(null);
+  const [currentListing, setCurrentListing] = useState<ListingCaseDetail  | null>(null);
 
   const [mediaUploadType, setMediaUploadType] = useState<MediaType | null>(null);
   const [isMediaModalOpen, setMediaModalOpen] = useState(false);
@@ -222,10 +222,6 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
       >
         <AssignAgentPopupContent
           listingCaseId={Number(listingId)}
-          onAssigned={() => {
-            setAssignAgentOpen(false);
-            fetchAssets(Number(listingId));
-          }}
         />
       </CommonModal>
 
@@ -235,7 +231,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           onClose={() => setIsEditing(false)}
           onUpdated={() => {
             setIsEditing(false);
-            fetchAssets(currentListing?.id); // 重新加载数据
+            fetchAssets(currentListing?.id);
           }}
         />
       )}
