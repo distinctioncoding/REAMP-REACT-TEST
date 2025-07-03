@@ -8,12 +8,14 @@ import { MediaAssetResponseDto } from '../interfaces/MediaAssetResponseDto';
 interface GenericMediaUploadFormProps {
   listingId: number;
   mediaType: MediaType;
+  existingAssets: MediaAssetResponseDto[];
   onUploadSuccess: () => void;
 }
 
 export default function GenericMediaUploadForm({
   listingId,
   mediaType,
+  existingAssets,
   onUploadSuccess,
 }: GenericMediaUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
@@ -21,16 +23,18 @@ export default function GenericMediaUploadForm({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const getAcceptType = (): { [key: string]: string[] } => {
-  switch (mediaType) {
-    case MediaType.Video:
-      return { 'video/*': [] };
-    case MediaType.FloorPlan:
-    case MediaType.VRTour:
-    default:
-      return { 'image/*': [] };
-  }
-};
-
+    switch (mediaType) {
+      case MediaType.Video:
+        return { 'video/*': [] };
+      case MediaType.FloorPlan:
+      case MediaType.VRTour:
+      default:
+        return { 'image/*': [] };
+    }
+  };
+  const filteredAssets = existingAssets.filter(
+    (a) => Number(a.mediaType) === mediaType
+  );
 
   const { getRootProps, getInputProps, acceptedFiles, fileRejections } = useDropzone({
     accept: getAcceptType(),
@@ -40,23 +44,10 @@ export default function GenericMediaUploadForm({
   });
 
   useEffect(() => {
-    fetchMediaAssets();
-  }, []);
-
-  useEffect(() => {
     if (acceptedFiles.length > 0) {
       setSelectedFiles((prev) => [...prev, ...acceptedFiles]);
     }
   }, [acceptedFiles]);
-
-  const fetchMediaAssets = async () => {
-    try {
-      const result = await getMediaAssetsByListingId(listingId);
-      setExistingMediaAssets(result?.filter((m: MediaAssetResponseDto) => m.mediaType === mediaType));
-    } catch (err) {
-      console.error('Failed to fetch existing media assets', err);
-    }
-  };
 
   const handleUpload = async () => {
     if (selectedFiles.length === 0) return;
@@ -69,7 +60,6 @@ export default function GenericMediaUploadForm({
         type: mediaType,
       });
       setSelectedFiles([]);
-      await fetchMediaAssets();
       onUploadSuccess();
     } catch (err) {
       console.error('Upload failed', err);
@@ -80,24 +70,26 @@ export default function GenericMediaUploadForm({
 
   return (
     <div className="flex flex-col space-y-4">
-      {/* Existing media preview */}
-      {existingMediaAssets.length > 0 && (
+      {filteredAssets.length > 0 && (
         <div className="space-y-2">
-          <p className="text-white font-semibold">Previously uploaded files:</p>
+          <p className="text-white font-semibold">Previously uploaded {MediaType[mediaType]}:</p>
           <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto">
-            {existingMediaAssets.map((media) => (
+            {filteredAssets.map((media) => (
               <div key={media.id} className="border p-1 rounded">
                 {mediaType === MediaType.Video ? (
                   <video src={media.mediaUrl ?? ''} controls className="w-full h-24 rounded" />
                 ) : (
                   <img src={media.mediaUrl ?? ''} alt={media.fileName || media.id.toString()} className="object-cover w-full h-24 rounded" />
                 )}
-                <p className="text-xs truncate mt-1 text-center">{media.fileName || media.id}</p>
+                <p className="text-xs truncate mt-1 text-center">
+                  {media.fileName || media.id.toString()}
+                </p>
               </div>
             ))}
           </div>
         </div>
       )}
+
 
       {/* Dropzone area */}
       <div

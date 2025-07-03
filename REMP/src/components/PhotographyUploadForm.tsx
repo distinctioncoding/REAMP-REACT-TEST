@@ -1,21 +1,22 @@
 import { useDropzone } from 'react-dropzone';
 import { FaRegFolderOpen } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import { uploadMediaToListingCase, getMediaAssetsByListingId } from '../services/MediaAssetService';
+import { uploadMediaToListingCase } from '../services/MediaAssetService';
 import { MediaType } from '../enums/mediaType';
 import { MediaAssetResponseDto } from '../interfaces/MediaAssetResponseDto';
 
 type PhotographyUploadFormProps = {
   listingId: number;
+  existingAssets: MediaAssetResponseDto[];
   onUploadSuccess: () => void;
 };
 
 export default function PhotographyUploadForm({
   listingId,
+  existingAssets,
   onUploadSuccess,
 }: PhotographyUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [existingMediaAssets, setExistingMediaAssets] = useState<MediaAssetResponseDto[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const { getRootProps, getInputProps, acceptedFiles, fileRejections } = useDropzone({
@@ -25,25 +26,11 @@ export default function PhotographyUploadForm({
     maxSize: 10 * 1024 * 1024,
   });
 
-  // Fetch existing media assets when component loads
-  useEffect(() => {
-    fetchMediaAssets();
-  }, []);
-
   useEffect(() => {
     if (acceptedFiles.length > 0) {
       setSelectedFiles((prev) => [...prev, ...acceptedFiles]);
     }
   }, [acceptedFiles]);
-
-  const fetchMediaAssets = async () => {
-    try {
-      const result = await getMediaAssetsByListingId(listingId);
-      setExistingMediaAssets(result);
-    } catch (err) {
-      console.error('Failed to fetch existing media assets', err);
-    }
-  };
 
   const handleUpload = async () => {
     if (selectedFiles.length === 0) {
@@ -60,7 +47,6 @@ export default function PhotographyUploadForm({
       });
       alert('Upload successful!');
       setSelectedFiles([]);
-      await fetchMediaAssets(); // Refresh existing media after upload
       onUploadSuccess();
     } catch (err) {
       console.error('Upload failed', err);
@@ -72,12 +58,11 @@ export default function PhotographyUploadForm({
 
   return (
     <div className="flex flex-col space-y-4">
-      {/* Existing media preview */}
-      {existingMediaAssets.length > 0 && (
+      {existingAssets.length > 0 && (
         <div className="space-y-2">
           <p className="text-white font-semibold">Previously uploaded images:</p>
           <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto">
-            {existingMediaAssets.map((media) => (
+            {existingAssets.map((media) => (
               <div key={media.id} className="border p-1 rounded">
                 <img
                   src={media.mediaUrl ?? ''}
@@ -92,6 +77,7 @@ export default function PhotographyUploadForm({
           </div>
         </div>
       )}
+
 
       {/* Dropzone area */}
       <div

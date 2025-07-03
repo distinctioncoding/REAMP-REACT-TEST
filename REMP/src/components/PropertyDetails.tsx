@@ -41,6 +41,9 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
 
   const [isAssignAgentOpen, setAssignAgentOpen] = useState(false);
   const [agents, setAgents] = useState<Agent[]>([]);
+
+  const [allMediaAssets, setAllMediaAssets] = useState<MediaAssetResponseDto[]>([]);
+
   useEffect(() => {
     if (!listingId) return;
     fetchAssets(Number(listingId));
@@ -58,6 +61,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
     try {
       const listing = await getListingCaseDetail(id);
       const data = flattenMediaAssets(listing.mediaAssets);
+      setAllMediaAssets(data);
       const { status, pictureCount } = calculateMediaStatus(data);
 
       setCurrentListing(listing);
@@ -96,7 +100,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           pictureCount++;
           if (pictureCount === 1) {
             status.photographyW = true;
-          } 
+          }
           break;
         case 2: // Video
           status.videography = true;
@@ -114,7 +118,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
 
   const assetBlocks = [
     { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, showCount: true },
-    { label: 'Assign Agent', key: 'assignAgent', icon: <BsCamera className="text-orange-500 text-2xl" />, alwaysOn: true},
+    { label: 'Assign Agent', key: 'assignAgent', icon: <BsCamera className="text-orange-500 text-2xl" />, alwaysOn: true },
     { label: 'Floor Plan', key: 'floorPlan', icon: <HiOutlineDocumentSearch className="text-green-600 text-2xl" /> },
     { label: 'Videography', key: 'videography', icon: <BsCameraVideo className="text-gray-400 text-2xl" /> },
     { label: 'VR Tour', key: 'vrTour', icon: <FaVrCardboard className="text-gray-400 text-2xl" /> },
@@ -182,6 +186,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
       >
         <PhotographyUploadForm
           listingId={Number(listingId)}
+          existingAssets={allMediaAssets.filter(a => Number(a.mediaType) === MediaType.Picture)}
           onUploadSuccess={() => {
             setPhotographyModalOpen(false);
             fetchAssets(Number(listingId));
@@ -199,6 +204,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           <MediaUploadForm
             listingId={Number(listingId)}
             mediaType={mediaUploadType}
+            existingAssets={allMediaAssets}
             onUploadSuccess={() => {
               setMediaModalOpen(false);
               fetchAssets(Number(listingId));
