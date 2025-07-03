@@ -11,7 +11,7 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
 import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
-import { ListingCase } from '../interfaces/listing-case';
+import { ListingCaseDetail  } from '../interfaces/listing-case';
 import { MediaType } from '../enums/mediaType';
 import MediaUploadForm from './MediaUploadForm';
 import { Agent } from '../interfaces/agent-response';
@@ -34,7 +34,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const [uploadPhotographyType, setUploadPhotographyType] = useState<'W' | 'P'>('W');
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentListing, setCurrentListing] = useState<ListingCase | null>(null);
+  const [currentListing, setCurrentListing] = useState<ListingCaseDetail  | null>(null);
 
   const [mediaUploadType, setMediaUploadType] = useState<MediaType | null>(null);
   const [isMediaModalOpen, setMediaModalOpen] = useState(false);
@@ -96,7 +96,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           pictureCount++;
           if (pictureCount === 1) {
             status.photographyW = true;
-          } 
+          }
           break;
         case 2: // Video
           status.videography = true;
@@ -114,7 +114,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
 
   const assetBlocks = [
     { label: 'Photography-W', key: 'photographyW', icon: <BsCamera className="text-blue-600 text-2xl" />, showCount: true },
-    { label: 'Assign Agent', key: 'assignAgent', icon: <BsCamera className="text-orange-500 text-2xl" />, alwaysOn: true},
+    { label: 'Assign Agent', key: 'assignAgent', icon: <BsCamera className="text-orange-500 text-2xl" />, alwaysOn: true },
     { label: 'Floor Plan', key: 'floorPlan', icon: <HiOutlineDocumentSearch className="text-green-600 text-2xl" /> },
     { label: 'Videography', key: 'videography', icon: <BsCameraVideo className="text-gray-400 text-2xl" /> },
     { label: 'VR Tour', key: 'vrTour', icon: <FaVrCardboard className="text-gray-400 text-2xl" /> },
@@ -216,10 +216,6 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
       >
         <AssignAgentPopupContent
           listingCaseId={Number(listingId)}
-          onAssigned={() => {
-            setAssignAgentOpen(false);
-            fetchAssets(Number(listingId));
-          }}
         />
       </CommonModal>
 
@@ -229,7 +225,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           onClose={() => setIsEditing(false)}
           onUpdated={() => {
             setIsEditing(false);
-            fetchAssets(currentListing?.id); // 重新加载数据
+            fetchAssets(currentListing?.id);
           }}
         />
       )}
