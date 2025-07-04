@@ -4,6 +4,8 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 import { Agent } from '../interfaces/agent-response';
 import { getAllAgents } from '../api/agent/get-all-agents';
 import { assignAgentToListing } from '../api/listingcase/listing-addAgent';
+import { getAgentsByCompanyId } from '../api/agent/get-agent-by-companyid';
+import { useAuth } from '../contexts/AuthContext';
 
 interface AssignAgentPopupContentProps {
   listingCaseId: number;
@@ -15,22 +17,28 @@ const AssignAgentPopupContent: React.FC<AssignAgentPopupContentProps> = ({ listi
   const [assigningId, setAssigningId] = useState<string | null>(null);
   const [errorMap, setErrorMap] = useState<Record<string, string>>({});
 
+  const { user } = useAuth();
+  const userRole = user?.role;
+  
+  console.log('user:', user);
   useEffect(() => {
     fetchAll();
   }, [listingCaseId]);
 
-  const fetchAll = async () => {
-    try {
-      const [all, detail] = await Promise.all([
-        getAllAgents(),
-        getListingCaseDetail(listingCaseId),
-      ]);
-      setAllAgents(all);
-      setAssignedAgents(detail.agents ?? []);
-    } catch (err) {
-      console.error('Failed to fetch agent data:', err);
-    }
-  };
+const fetchAll = async () => {
+  try {
+    const agentList =
+      userRole === 'PhotographyCompany'
+        ? await getAgentsByCompanyId()
+        : await getAllAgents();
+    const detail = await getListingCaseDetail(listingCaseId);
+    setAllAgents(agentList);
+    setAssignedAgents(detail.agents ?? []);
+  } catch (err) {
+    console.error('Failed to fetch agent data:', err);
+  }
+};
+
 
   const handleAssign = async (agentId: string) => {
     setAssigningId(agentId);
