@@ -11,7 +11,7 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
 import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
-import { ListingCaseDetail  } from '../interfaces/listing-case';
+import { ListingCaseDetail } from '../interfaces/listing-case';
 import { MediaType } from '../enums/mediaType';
 import MediaUploadForm from './MediaUploadForm';
 import { Agent } from '../interfaces/agent-response';
@@ -34,7 +34,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const [uploadPhotographyType, setUploadPhotographyType] = useState<'W' | 'P'>('W');
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentListing, setCurrentListing] = useState<ListingCaseDetail  | null>(null);
+  const [currentListing, setCurrentListing] = useState<ListingCaseDetail | null>(null);
 
   const [mediaUploadType, setMediaUploadType] = useState<MediaType | null>(null);
   const [isMediaModalOpen, setMediaModalOpen] = useState(false);
@@ -189,6 +189,9 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
           existingAssets={allMediaAssets.filter(a => Number(a.mediaType) === MediaType.Picture)}
           onUploadSuccess={() => {
             setPhotographyModalOpen(false);
+            fetchAssets(Number(listingId));
+          }}
+          onDeleteSuccess={() => {
             fetchAssets(Number(listingId));
           }}
         />

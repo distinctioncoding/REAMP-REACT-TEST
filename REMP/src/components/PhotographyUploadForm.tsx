@@ -1,7 +1,7 @@
 import { useDropzone } from 'react-dropzone';
 import { FaRegFolderOpen } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import { uploadMediaToListingCase } from '../services/MediaAssetService';
+import { deleteMediaAsset, uploadMediaToListingCase } from '../services/MediaAssetService';
 import { MediaType } from '../enums/mediaType';
 import { MediaAssetResponseDto } from '../interfaces/MediaAssetResponseDto';
 
@@ -9,12 +9,14 @@ type PhotographyUploadFormProps = {
   listingId: number;
   existingAssets: MediaAssetResponseDto[];
   onUploadSuccess: () => void;
+  onDeleteSuccess: () => void;
 };
 
 export default function PhotographyUploadForm({
   listingId,
   existingAssets,
   onUploadSuccess,
+  onDeleteSuccess,
 }: PhotographyUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -60,10 +62,27 @@ export default function PhotographyUploadForm({
     <div className="flex flex-col space-y-4">
       {existingAssets.length > 0 && (
         <div className="space-y-2">
-          <p className="text-white font-semibold">Previously uploaded images:</p>
+          <p className="text-black font-semibold">Previously uploaded images:</p>
           <div className="grid grid-cols-4 gap-2 max-h-[300px] overflow-y-auto">
             {existingAssets.map((media) => (
-              <div key={media.id} className="border p-1 rounded">
+              <div key={media.id} className="relative border p-1 rounded group">
+                <button
+                  onClick={async () => {
+                    try {
+                      await deleteMediaAsset(media.id);
+                      alert('Deleted successfully');
+                      onDeleteSuccess();
+                    } catch (err) {
+                      console.error('Delete failed', err);
+                      alert('Delete failed');
+                    }
+                  }}
+                  title="Remove"
+                  className="absolute top-1 right-1 w-5 h-5 rounded-full bg-gray-700 
+                              text-white text-xs flex items-center justify-center hover:bg-red-600 shadow"
+                >
+                  ×
+                </button>
                 <img
                   src={media.mediaUrl ?? ''}
                   alt={media.fileName || media.id.toString()}
@@ -73,6 +92,7 @@ export default function PhotographyUploadForm({
                   {media.fileName || media.id.toString()}
                 </p>
               </div>
+
             ))}
           </div>
         </div>

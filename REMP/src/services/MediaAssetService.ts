@@ -39,3 +39,13 @@ export const getMediaAssetsByListingId = async (listingCaseId: number) => {
     throw error;
   }
 };
+
+export const deleteMediaAsset  = async (mediaId: number,) => {
+  try {
+    const response = await apiClient.delete(`/MediaAsset/${mediaId}/delete`);
+    return response.data;
+  } catch (error) {
+    console.error("getMediaAssetsByListingId failed:", error);
+    throw error;
+  }
+};
