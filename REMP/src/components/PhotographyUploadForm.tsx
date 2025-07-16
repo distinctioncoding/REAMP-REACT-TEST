@@ -9,14 +9,14 @@ type PhotographyUploadFormProps = {
   listingId: number;
   existingAssets: MediaAssetResponseDto[];
   onUploadSuccess: () => void;
-  onDeleteSuccess: () => void;
+  onDeleteLocalUpdate?: (deletedId: number) => void;
 };
 
 export default function PhotographyUploadForm({
   listingId,
   existingAssets,
   onUploadSuccess,
-  onDeleteSuccess,
+  onDeleteLocalUpdate,
 }: PhotographyUploadFormProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -71,7 +71,7 @@ export default function PhotographyUploadForm({
                     try {
                       await deleteMediaAsset(media.id);
                       alert('Deleted successfully');
-                      onDeleteSuccess();
+                      onDeleteLocalUpdate?.(media.id);
                     } catch (err) {
                       console.error('Delete failed', err);
                       alert('Delete failed');

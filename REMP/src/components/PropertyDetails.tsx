@@ -83,6 +83,21 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
     ];
   };
 
+    const handleRemoveLocalPicture = (deletedId: number) => {
+    if (!currentListing) return;
+    const updatedPictures = currentListing.mediaAssets.picture.filter(p => p.id !== deletedId);
+    const updatedAssets = {
+      ...currentListing.mediaAssets,
+      picture: updatedPictures
+    };
+    const allAssets: MediaAssetResponseDto[] = flattenMediaAssets(updatedAssets);
+    const { status, pictureCount } = calculateMediaStatus(allAssets);
+
+    setAssets(status);
+    setPictureCount(pictureCount);
+    setAllMediaAssets(allAssets);
+  };
+
   const calculateMediaStatus = (assets: MediaAssetResponseDto[]) => {
     const status: ListingAssetStatus = {
       photographyW: false,
@@ -191,9 +206,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
             setPhotographyModalOpen(false);
             fetchAssets(Number(listingId));
           }}
-          onDeleteSuccess={() => {
-            fetchAssets(Number(listingId));
-          }}
+          onDeleteLocalUpdate={handleRemoveLocalPicture}
         />
       </CommonModal>
 
