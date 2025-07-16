@@ -50,7 +50,7 @@ const AssignAgentPopupContent: React.FC<AssignAgentPopupContentProps> = ({ listi
   const handleUnassign = async (agentId: string) => {
     setAssigningId(agentId);
     try {
-      await removeAgentFromListingCase(listingCaseId, agentId);
+      await removeAgentFromListingCase(agentId,listingCaseId );
       await fetchAll();
     } catch (err) {
       console.error('Failed to unassign agent:', err);

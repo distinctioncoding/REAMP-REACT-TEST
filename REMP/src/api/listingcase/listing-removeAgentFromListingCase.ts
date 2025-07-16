@@ -1,18 +1,18 @@
 import apiClient from "../apiClient";
 
-export const removeAgentFromListingCase = async (
-  listingCaseId: number,
-  agentId: string
+export interface RemoveAgentFromListingCaseDto {
+  agentId: string;
+  listingCaseId: number;
+}
+
+export const removeAgentFromListingCase = (
+  agentId: string,
+  listingCaseId: number
 ): Promise<void> => {
-  await apiClient.request({
-    method: 'DELETE',
-    url: '/ListingCase/RemoveAgentFromListingCase',
-    data: {
-      listingCaseId,
-      agentId,
-    },
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const data: RemoveAgentFromListingCaseDto = {
+    agentId,
+    listingCaseId,
+  };
+
+  return apiClient.delete('/ListingCase/RemoveAgentFromListingCase', {data});
 };
