@@ -11,7 +11,7 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 import CommonModal from '../components/CommonModal';
 import PhotographyUploadForm from '../components/PhotographyUploadForm';
 import ListingUpdateDialog from './ListingDashboard/ListingUpdate';
-import { ListingCaseDetail  } from '../interfaces/listing-case';
+import { ListingCaseDetail } from '../interfaces/listing-case';
 import { MediaType } from '../enums/mediaType';
 import MediaUploadForm from './MediaUploadForm';
 import { Agent } from '../interfaces/agent-response';
@@ -34,7 +34,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
   const [uploadPhotographyType, setUploadPhotographyType] = useState<'W' | 'P'>('W');
 
   const [isEditing, setIsEditing] = useState(false);
-  const [currentListing, setCurrentListing] = useState<ListingCaseDetail  | null>(null);
+  const [currentListing, setCurrentListing] = useState<ListingCaseDetail | null>(null);
 
   const [mediaUploadType, setMediaUploadType] = useState<MediaType | null>(null);
   const [isMediaModalOpen, setMediaModalOpen] = useState(false);
@@ -81,6 +81,21 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
       ...(categorized?.floorPlan || []),
       ...(categorized?.vrTour || [])
     ];
+  };
+
+    const handleRemoveLocalPicture = (deletedId: number) => {
+    if (!currentListing) return;
+    const updatedPictures = currentListing.mediaAssets.picture.filter(p => p.id !== deletedId);
+    const updatedAssets = {
+      ...currentListing.mediaAssets,
+      picture: updatedPictures
+    };
+    const allAssets: MediaAssetResponseDto[] = flattenMediaAssets(updatedAssets);
+    const { status, pictureCount } = calculateMediaStatus(allAssets);
+
+    setAssets(status);
+    setPictureCount(pictureCount);
+    setAllMediaAssets(allAssets);
   };
 
   const calculateMediaStatus = (assets: MediaAssetResponseDto[]) => {
@@ -191,6 +206,7 @@ const PropertyDetail = ({ id }: PropertyDetailProps) => {
             setPhotographyModalOpen(false);
             fetchAssets(Number(listingId));
           }}
+          onDeleteLocalUpdate={handleRemoveLocalPicture}
         />
       </CommonModal>
 
