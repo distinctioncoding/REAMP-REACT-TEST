@@ -4,6 +4,7 @@ import { getListingCaseDetail } from '../api/listingcase/listing-api';
 import { Agent } from '../interfaces/agent-response';
 import { getAllAgents } from '../api/agent/get-all-agents';
 import { assignAgentToListing } from '../api/listingcase/listing-addAgent';
+import { removeAgentFromListingCase } from '../api/listingcase/listing-removeAgentFromListingCase';
 
 interface AssignAgentPopupContentProps {
   listingCaseId: number;
@@ -46,7 +47,17 @@ const AssignAgentPopupContent: React.FC<AssignAgentPopupContentProps> = ({ listi
       setAssigningId(null);
     }
   };
-
+  const handleUnassign = async (agentId: string) => {
+    setAssigningId(agentId);
+    try {
+      await removeAgentFromListingCase(agentId,listingCaseId );
+      await fetchAll();
+    } catch (err) {
+      console.error('Failed to unassign agent:', err);
+    } finally {
+      setAssigningId(null);
+    }
+  };
   const assignedIds = new Set(assignedAgents.map((a) => a.id));
   const availableAgents = allAgents.filter((a) => !assignedIds.has(a.id));
 
@@ -60,18 +71,28 @@ const AssignAgentPopupContent: React.FC<AssignAgentPopupContentProps> = ({ listi
         ) : (
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {assignedAgents.map((agent) => (
-              <div key={agent.id} className="flex items-center gap-3 bg-gray-100 p-3 rounded-lg">
-                <img
-                  src={agent.avatarUrl || defaultAvatar}
-                  alt="avatar"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <div className="font-medium">
-                    {agent.firstName} {agent.lastName}
+              <div key={agent.id} className="flex items-center gap-3 bg-gray-100 p-3 rounded-lg justify-between">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={agent.avatarUrl || defaultAvatar}
+                    alt="avatar"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-medium">
+                      {agent.firstName} {agent.lastName}
+                    </div>
+                    <div className="text-sm text-gray-500">{agent.companyName}</div>
                   </div>
-                  <div className="text-sm text-gray-500">{agent.companyName}</div>
                 </div>
+
+                <button
+                  onClick={() => handleUnassign(agent.id)}
+                  disabled={assigningId === agent.id}
+                  className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition disabled:opacity-60"
+                >
+                  {assigningId === agent.id ? 'Removing...' : 'Unassign'}
+                </button>
               </div>
             ))}
           </div>
