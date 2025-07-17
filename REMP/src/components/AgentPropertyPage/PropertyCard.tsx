@@ -4,6 +4,7 @@ import { formatDate } from '../../lib/format-date';
 import { ListcaseStatus } from "../../enums/listcase-status";
 import { getStatusLabel } from "../../lib/get-status-label";
 import { ListingCase } from '../../interfaces/listing-case';
+import { useNavigate } from "react-router-dom";
 
 interface PropertyCardProps {
   listing: ListingCase;
@@ -12,7 +13,7 @@ interface PropertyCardProps {
 const PropertyCard = ({ listing }: PropertyCardProps) => {
   const latestStatus = getStatusLabel(listing.listcaseStatus as ListcaseStatus);
   const formattedDate = formatDate(listing.createdAt);
-
+  const navigate = useNavigate();
   return (
       <div className="relative w-full max-w-screen-lg mx-auto my-6 px-4 py-5 bg-white border border-gray-200 rounded-md shadow-sm">
       {/* Status badge */}
@@ -48,9 +49,12 @@ const PropertyCard = ({ listing }: PropertyCardProps) => {
     
       {/* Bottom-right link */}
       <div className="text-right">
-        <a href="#" className="text-xs text-gray-400 hover:underline">
-          View property details →
-        </a>
+        <button
+        onClick={() => navigate(`/preview/${listing.id}`)}
+        className="text-xs text-blue-400 hover:underline"
+      >
+        View property details →
+      </button>
       </div>
     </div>
   );
